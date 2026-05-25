@@ -1,0 +1,249 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
+  <defs>
+    <radialGradient id="bg4" cx="45%" cy="40%" r="70%">
+      <stop offset="0%"   stop-color="#0A0E28"/>
+      <stop offset="55%"  stop-color="#060818"/>
+      <stop offset="100%" stop-color="#030410"/>
+    </radialGradient>
+    <radialGradient id="g4-lav" cx="60%" cy="38%" r="40%">
+      <stop offset="0%"   stop-color="#A78BFA" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+    <radialGradient id="g4-rose" cx="25%" cy="62%" r="36%">
+      <stop offset="0%"   stop-color="#F43F5E" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+    <radialGradient id="g4-gold" cx="78%" cy="70%" r="32%">
+      <stop offset="0%"   stop-color="#FBBF24" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+    <linearGradient id="cl4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#5B21B6"/>
+    </linearGradient>
+    <linearGradient id="sk4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#6D28D9"/>
+      <stop offset="100%" stop-color="#4C1D95"/>
+    </linearGradient>
+    <!-- Gradient de course (silhouette) -->
+    <linearGradient id="run-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#A78BFA" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#7C3AED" stop-opacity="0.5"/>
+    </linearGradient>
+    <filter id="glow4" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="9" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow4-sm" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="blur4-xl"><feGaussianBlur stdDeviation="70"/></filter>
+    <filter id="blur4-md"><feGaussianBlur stdDeviation="28"/></filter>
+  </defs>
+
+  <!-- FOND -->
+  <rect width="1080" height="1920" fill="url(#bg4)"/>
+  <rect width="1080" height="1920" fill="url(#g4-lav)"/>
+  <rect width="1080" height="1920" fill="url(#g4-rose)"/>
+  <rect width="1080" height="1920" fill="url(#g4-gold)"/>
+
+  <!-- Halos -->
+  <ellipse cx="540" cy="760"  rx="420" ry="340" fill="#A78BFA" opacity="0.06" filter="url(#blur4-xl)"/>
+  <ellipse cx="200" cy="1200" rx="280" ry="240" fill="#F43F5E" opacity="0.05" filter="url(#blur4-xl)"/>
+  <ellipse cx="900" cy="500"  rx="240" ry="200" fill="#FBBF24" opacity="0.05" filter="url(#blur4-xl)"/>
+
+  <!-- ══ TIMER CERCLE "30 MIN" ══ -->
+  <g transform="translate(540,440)" filter="url(#glow4)">
+    <!-- Cercle extérieur (progrès) -->
+    <circle cx="0" cy="0" r="150" fill="none" stroke="#A78BFA" stroke-width="6" opacity="0.2"/>
+    <!-- Arc de progrès (circumference ≈ 942, 50% = 471) -->
+    <circle cx="0" cy="0" r="150" fill="none" stroke="#A78BFA" stroke-width="8"
+            stroke-dasharray="471 942" stroke-dashoffset="236"
+            stroke-linecap="round" opacity="0.85" transform="rotate(-90)"/>
+    <!-- Intérieur -->
+    <circle cx="0" cy="0" r="128" fill="#060818" opacity="0.9"/>
+    <circle cx="0" cy="0" r="120" fill="none" stroke="#A78BFA" stroke-width="1.5" opacity="0.2"/>
+    <!-- Texte du timer -->
+    <text x="0" y="-20" text-anchor="middle" font-family="Inter,sans-serif"
+          font-size="72" font-weight="900" fill="#A78BFA">30</text>
+    <text x="0" y="18" text-anchor="middle" font-family="Inter,sans-serif"
+          font-size="22" font-weight="700" fill="rgba(167,139,250,0.65)" letter-spacing="0.2em">MINUTES</text>
+    <text x="0" y="48" text-anchor="middle" font-family="Inter,sans-serif"
+          font-size="16" font-weight="600" fill="rgba(253,244,255,0.4)" letter-spacing="0.14em">PAR JOUR</text>
+  </g>
+
+  <!-- ══ 3 CARTES D'ACTIVITÉS ══ -->
+  <!-- Carte TikTok -->
+  <g transform="translate(200,760)">
+    <rect x="-130" y="-80" width="260" height="160" rx="20"
+          fill="#0D0A20" stroke="#F43F5E" stroke-width="1.8" stroke-opacity="0.55" opacity="0.92"/>
+    <!-- Phone icon simplifié -->
+    <rect x="-40" y="-58" width="62" height="100" rx="10" fill="#1A0828" stroke="#F43F5E" stroke-width="2.5" stroke-opacity="0.7"/>
+    <!-- Screen -->
+    <rect x="-34" y="-50" width="50" height="82" rx="6" fill="#0A0414"/>
+    <!-- TikTok logo simplifié (note de musique stylisée) -->
+    <g filter="url(#glow4-sm)">
+      <path d="M-10,-24 C-10,-30 -4,-34 2,-32 C8,-30 12,-24 12,-18 C12,-10 6,-4 -2,-4 C-8,-4 -12,-8 -12,-14"
+            stroke="#F43F5E" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <line x1="-12" y1="-14" x2="-12" y2="20"  stroke="#F43F5E" stroke-width="5" stroke-linecap="round"/>
+      <line x1="-12" y1="-14" x2="12"  y2="-18" stroke="#F43F5E" stroke-width="4" stroke-linecap="round"/>
+    </g>
+    <!-- Bouton home -->
+    <circle cx="-9" cy="40" r="6" fill="none" stroke="#F43F5E" stroke-width="2" stroke-opacity="0.5"/>
+    <!-- Label -->
+    <text x="56" y="-10" text-anchor="middle" font-family="Inter,sans-serif"
+          font-size="22" font-weight="900" fill="#F43F5E">TikTok</text>
+    <text x="56" y="18" text-anchor="middle" font-family="Inter,sans-serif"
+          font-size="15" font-weight="600" fill="rgba(253,212,220,0.55)">Contenu</text>
+  </g>
+
+  <!-- Carte Sport -->
+  <g transform="translate(540,760)">
+    <rect x="-130" y="-80" width="260" height="160" rx="20"
+          fill="#0A0E20" stroke="#A78BFA" stroke-width="1.8" stroke-opacity="0.55" opacity="0.92"/>
+    <!-- Silhouette coureuse stylisée -->
+    <g transform="translate(-50,-10)" filter="url(#glow4-sm)">
+      <!-- Tête -->
+      <circle cx="0" cy="-45" r="16" fill="#A78BFA" opacity="0.9"/>
+      <!-- Corps penché -->
+      <path d="M0,-30 C4,-10 8,10 10,30" stroke="#A78BFA" stroke-width="12" stroke-linecap="round" fill="none" opacity="0.9"/>
+      <!-- Jambe avant -->
+      <path d="M10,28 C18,42 22,55 28,65" stroke="#A78BFA" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.9"/>
+      <path d="M28,63 C32,70 42,72 46,68" stroke="#A78BFA" stroke-width="8" stroke-linecap="round" fill="none" opacity="0.8"/>
+      <!-- Jambe arrière -->
+      <path d="M6,28 C-2,42 -4,52 -6,62" stroke="#A78BFA" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.8"/>
+      <path d="M-6,60 C-10,68 -18,70 -22,66" stroke="#A78BFA" stroke-width="8" stroke-linecap="round" fill="none" opacity="0.7"/>
+      <!-- Bras -->
+      <path d="M0,-20 C-16,-8 -28,2 -36,14" stroke="#A78BFA" stroke-width="9" stroke-linecap="round" fill="none" opacity="0.8"/>
+      <path d="M0,-18 C14,-4 22,10 28,22" stroke="#A78BFA" stroke-width="9" stroke-linecap="round" fill="none" opacity="0.8"/>
+      <!-- Lignes vitesse -->
+      <line x1="-70" y1="-10" x2="-48" y2="-10" stroke="#A78BFA" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+      <line x1="-70" y1="4"   x2="-44" y2="4"   stroke="#A78BFA" stroke-width="2"   stroke-linecap="round" opacity="0.4"/>
+      <line x1="-70" y1="18"  x2="-46" y2="18"  stroke="#A78BFA" stroke-width="2"   stroke-linecap="round" opacity="0.4"/>
+    </g>
+    <text x="60" y="-10" text-anchor="middle" font-family="Inter,sans-serif"
+          font-size="22" font-weight="900" fill="#A78BFA">Sport</text>
+    <text x="60" y="18" text-anchor="middle" font-family="Inter,sans-serif"
+          font-size="15" font-weight="600" fill="rgba(221,214,254,0.55)">Cardio</text>
+  </g>
+
+  <!-- Carte Apprentissage -->
+  <g transform="translate(880,760)">
+    <rect x="-130" y="-80" width="260" height="160" rx="20"
+          fill="#0A0E20" stroke="#FBBF24" stroke-width="1.8" stroke-opacity="0.55" opacity="0.92"/>
+    <!-- Icône livre ouvert -->
+    <g transform="translate(-48,0)" filter="url(#glow4-sm)">
+      <!-- Livre gauche -->
+      <path d="M0,-50 C-28,-48 -46,-40 -46,-28 L-46,38 C-46,38 -28,32 0,34 Z" fill="#FBBF24" opacity="0.75"/>
+      <!-- Livre droit -->
+      <path d="M0,-50 C28,-48 46,-40 46,-28 L46,38 C46,38 28,32 0,34 Z" fill="#FBBF24" opacity="0.6"/>
+      <!-- Ligne centrale (dos du livre) -->
+      <line x1="0" y1="-50" x2="0" y2="34" stroke="#1A1000" stroke-width="3"/>
+      <!-- Lignes de texte -->
+      <line x1="-38" y1="-18" x2="-8" y2="-18" stroke="rgba(255,255,255,0.4)" stroke-width="2.5"/>
+      <line x1="-38" y1="-4"  x2="-8" y2="-4"  stroke="rgba(255,255,255,0.3)" stroke-width="2.5"/>
+      <line x1="-38" y1="10"  x2="-8" y2="10"  stroke="rgba(255,255,255,0.3)" stroke-width="2.5"/>
+      <line x1="8"   y1="-18" x2="38" y2="-18" stroke="rgba(255,255,255,0.3)" stroke-width="2.5"/>
+      <line x1="8"   y1="-4"  x2="38" y2="-4"  stroke="rgba(255,255,255,0.2)" stroke-width="2.5"/>
+    </g>
+    <text x="68" y="-10" text-anchor="middle" font-family="Inter,sans-serif"
+          font-size="19" font-weight="900" fill="#FBBF24">Lecture</text>
+    <text x="68" y="18" text-anchor="middle" font-family="Inter,sans-serif"
+          font-size="15" font-weight="600" fill="rgba(253,243,192,0.55)">Formation</text>
+  </g>
+
+  <!-- ══ FEMME DYNAMIQUE (en marche, confiante) ══ -->
+  <g transform="translate(540,1250)" opacity="0.84">
+    <!-- Ombre -->
+    <ellipse cx="0" cy="380" rx="126" ry="22" fill="#000" opacity="0.25" filter="url(#blur4-md)"/>
+
+    <!-- Jambe avant (en mouvement) -->
+    <path d="M20,200 C32,256 38,308 42,368" stroke="#D4A876" stroke-width="30" stroke-linecap="round" fill="none"/>
+    <!-- Pied avant -->
+    <path d="M42,366 C54,380 70,382 80,374" stroke="#4C1D95" stroke-width="22" stroke-linecap="round" fill="none"/>
+    <!-- Jambe arrière (poussée) -->
+    <path d="M-20,200 C-38,252 -46,294 -48,348" stroke="#D4A876" stroke-width="30" stroke-linecap="round" fill="none"/>
+    <!-- Pied arrière -->
+    <path d="M-48,346 C-58,354 -74,352 -80,342" stroke="#4C1D95" stroke-width="20" stroke-linecap="round" fill="none"/>
+
+    <!-- Jupe/legging (tenue sport) -->
+    <path d="M-48,130 C-60,165 -60,200 -56,220 L56,220 C60,200 60,165 48,130 Z" fill="url(#sk4)"/>
+    <!-- Haut (penché légèrement) -->
+    <path d="M-38,-22 C-52,14 -54,82 -48,130 L48,130 C54,82 52,14 38,-22 Z" fill="url(#cl4)"/>
+
+    <!-- Bras gauche (vers l'avant, mouvement) -->
+    <path d="M-38,-12 C-58,10 -70,50 -68,88" stroke="#D4A876" stroke-width="26" stroke-linecap="round" fill="none"/>
+    <circle cx="-68" cy="90" r="16" fill="#D4A876"/>
+
+    <!-- Bras droit (vers l'arrière) -->
+    <path d="M38,-12 C52,14 56,44 54,76" stroke="#D4A876" stroke-width="26" stroke-linecap="round" fill="none"/>
+    <circle cx="54" cy="78" r="16" fill="#D4A876"/>
+
+    <!-- Cou -->
+    <rect x="-12" y="-46" width="24" height="28" rx="7" fill="#C49A6C"/>
+
+    <!-- Cheveux (en mouvement, vers l'arrière) -->
+    <ellipse cx="0" cy="-88" rx="56" ry="66" fill="#2D1040"/>
+    <!-- Cheveux flottant vers l'arrière -->
+    <path d="M54,-118 C70,-70 80,10 78,90" stroke="#2D1040" stroke-width="36" stroke-linecap="round" fill="none"/>
+    <!-- Quelques mèches à gauche -->
+    <path d="M-54,-118 C-62,-78 -64,-20 -60,40" stroke="#2D1040" stroke-width="20" stroke-linecap="round" fill="none"/>
+
+    <!-- Visage -->
+    <circle cx="0" cy="-88" r="50" fill="#D4A876"/>
+    <ellipse cx="-4" cy="-94" rx="32" ry="36" fill="#E8C49A" opacity="0.42"/>
+
+    <!-- Yeux déterminés -->
+    <circle cx="-16" cy="-94" r="7.5" fill="#2D1040"/>
+    <circle cx="16"  cy="-94" r="7.5" fill="#2D1040"/>
+    <circle cx="-13" cy="-97" r="2.5" fill="white" opacity="0.9"/>
+    <circle cx="19"  cy="-97" r="2.5" fill="white" opacity="0.9"/>
+
+    <!-- Sourcils déterminés (légèrement froncés) -->
+    <path d="M-23,-112 C-14,-118 -7,-116 -5,-111" stroke="#2D1040" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M5,-111 C7,-116 14,-118 23,-112"      stroke="#2D1040" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+    <!-- Nez -->
+    <path d="M-4,-80 C0,-74 4,-80" stroke="#B8894E" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <!-- Sourire déterminé -->
+    <path d="M-11,-67 C-5,-62 5,-62 11,-67" stroke="#B8894E" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+
+    <!-- Cheveux avant -->
+    <path d="M-54,-114 C-42,-158 -22,-172 0,-172 C22,-172 42,-158 54,-114" fill="#2D1040"/>
+    <path d="M-16,-170 C-12,-148 -14,-128 -18,-108" stroke="#2D1040" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.7"/>
+  </g>
+
+  <!-- Lignes de vitesse (contexte dynamique) -->
+  <g filter="url(#glow4)" opacity="0.4">
+    <line x1="0"   y1="1180" x2="380" y2="1180" stroke="#A78BFA" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="0"   y1="1220" x2="320" y2="1220" stroke="#A78BFA" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="0"   y1="1260" x2="350" y2="1260" stroke="#A78BFA" stroke-width="2"   stroke-linecap="round"/>
+    <line x1="0"   y1="1300" x2="290" y2="1300" stroke="#A78BFA" stroke-width="1"   stroke-linecap="round"/>
+  </g>
+
+  <!-- Particules -->
+  <g filter="url(#glow4-sm)" opacity="0.72">
+    <circle cx="88"  cy="300" r="3.5" fill="#A78BFA"/>
+    <circle cx="238" cy="220" r="2.5" fill="#F43F5E"/>
+    <circle cx="918" cy="340" r="3"   fill="#FBBF24"/>
+    <circle cx="978" cy="195" r="2"   fill="#A78BFA"/>
+    <circle cx="120" cy="1500" r="2"  fill="#A78BFA" opacity="0.45"/>
+    <circle cx="958" cy="1420" r="2.5" fill="#F43F5E" opacity="0.4"/>
+  </g>
+
+  <!-- Étoiles -->
+  <circle cx="102" cy="160" r="1.5" fill="white" opacity="0.4"/>
+  <circle cx="320" cy="88"  r="1"   fill="white" opacity="0.32"/>
+  <circle cx="740" cy="128" r="1.5" fill="white" opacity="0.38"/>
+  <circle cx="480" cy="148" r="1.5" fill="#FDA4AF" opacity="0.55"/>
+
+  <!-- Vignette -->
+  <defs>
+    <radialGradient id="vig4" cx="50%" cy="50%" r="68%">
+      <stop offset="0%"   stop-color="transparent"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.76"/>
+    </radialGradient>
+  </defs>
+  <rect width="1080" height="1920" fill="url(#vig4)"/>
+</svg>

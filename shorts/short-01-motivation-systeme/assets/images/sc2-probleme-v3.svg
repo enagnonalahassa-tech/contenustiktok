@@ -1,0 +1,213 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
+  <defs>
+    <radialGradient id="bg2" cx="40%" cy="55%" r="68%">
+      <stop offset="0%"   stop-color="#2A0818"/>
+      <stop offset="50%"  stop-color="#160410"/>
+      <stop offset="100%" stop-color="#080208"/>
+    </radialGradient>
+    <radialGradient id="g2-r1" cx="30%" cy="42%" r="44%">
+      <stop offset="0%"   stop-color="#F43F5E" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+    <radialGradient id="g2-r2" cx="72%" cy="68%" r="38%">
+      <stop offset="0%"   stop-color="#C084FC" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+    <linearGradient id="cl2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#BE185D"/>
+      <stop offset="100%" stop-color="#9D174D"/>
+    </linearGradient>
+    <linearGradient id="sk2b" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#9D174D"/>
+      <stop offset="100%" stop-color="#831843"/>
+    </linearGradient>
+    <filter id="glow2" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow2-sm" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="blur2-xl"><feGaussianBlur stdDeviation="70"/></filter>
+    <filter id="blur2-md"><feGaussianBlur stdDeviation="28"/></filter>
+  </defs>
+
+  <!-- FOND -->
+  <rect width="1080" height="1920" fill="url(#bg2)"/>
+  <rect width="1080" height="1920" fill="url(#g2-r1)"/>
+  <rect width="1080" height="1920" fill="url(#g2-r2)"/>
+
+  <!-- Halos atmosphériques -->
+  <ellipse cx="200" cy="600"  rx="380" ry="300" fill="#F43F5E" opacity="0.07" filter="url(#blur2-xl)"/>
+  <ellipse cx="880" cy="1000" rx="300" ry="250" fill="#C084FC" opacity="0.06" filter="url(#blur2-xl)"/>
+  <ellipse cx="500" cy="1400" rx="320" ry="220" fill="#F43F5E" opacity="0.05" filter="url(#blur2-xl)"/>
+
+  <!-- "90%" en grand — texte fantôme de fond -->
+  <text x="540" y="980" text-anchor="middle" font-family="Inter,sans-serif"
+        font-size="520" font-weight="900" fill="#F43F5E" opacity="0.032">90%</text>
+
+  <!-- ══ TRACKER 21 JOURS ══ -->
+  <!-- Carte tracker -->
+  <rect x="80" y="320" width="920" height="380" rx="28"
+        fill="#1A0414" stroke="#F43F5E" stroke-width="1.5" stroke-opacity="0.3" opacity="0.9"/>
+
+  <!-- Titre tracker -->
+  <text x="540" y="372" text-anchor="middle" font-family="Inter,sans-serif"
+        font-size="22" font-weight="700" letter-spacing="0.18em" fill="rgba(253,212,220,0.6)">TRACKER · 21 JOURS</text>
+
+  <!-- Semaine 1 — tout vert ✓ -->
+  <text x="108" y="414" font-family="Inter,sans-serif" font-size="16" font-weight="700"
+        fill="rgba(253,212,220,0.4)">SEMAINE 1</text>
+  <g filter="url(#glow2-sm)">
+    <circle cx="154" cy="454" r="24" fill="#22C55E" opacity="0.9"/>
+    <circle cx="288" cy="454" r="24" fill="#22C55E" opacity="0.9"/>
+    <circle cx="422" cy="454" r="24" fill="#22C55E" opacity="0.9"/>
+    <circle cx="556" cy="454" r="24" fill="#22C55E" opacity="0.9"/>
+    <circle cx="688" cy="454" r="24" fill="#22C55E" opacity="0.9"/>
+    <circle cx="822" cy="454" r="24" fill="#22C55E" opacity="0.9"/>
+    <circle cx="926" cy="454" r="24" fill="#22C55E" opacity="0.9"/>
+  </g>
+  <!-- checkmarks semaine 1 -->
+  <g stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M144,454 L150,461 L164,445"/>
+    <path d="M278,454 L284,461 L298,445"/>
+    <path d="M412,454 L418,461 L432,445"/>
+    <path d="M546,454 L552,461 L566,445"/>
+    <path d="M678,454 L684,461 L698,445"/>
+    <path d="M812,454 L818,461 L832,445"/>
+    <path d="M916,454 L922,461 L936,445"/>
+  </g>
+
+  <!-- Semaine 2 — dégradé vers abandon -->
+  <text x="108" y="516" font-family="Inter,sans-serif" font-size="16" font-weight="700"
+        fill="rgba(253,212,220,0.4)">SEMAINE 2</text>
+  <!-- 3 verts, 1 orange, 3 rouges -->
+  <circle cx="154" cy="556" r="24" fill="#22C55E" opacity="0.7" filter="url(#glow2-sm)"/>
+  <circle cx="288" cy="556" r="24" fill="#22C55E" opacity="0.7" filter="url(#glow2-sm)"/>
+  <circle cx="422" cy="556" r="24" fill="#F59E0B" opacity="0.8" filter="url(#glow2-sm)"/>
+  <circle cx="556" cy="556" r="24" fill="#F43F5E" opacity="0.85" filter="url(#glow2-sm)"/>
+  <circle cx="688" cy="556" r="24" fill="#F43F5E" opacity="0.85" filter="url(#glow2-sm)"/>
+  <circle cx="822" cy="556" r="24" fill="#F43F5E" opacity="0.85" filter="url(#glow2-sm)"/>
+  <circle cx="926" cy="556" r="24" fill="#F43F5E" opacity="0.85" filter="url(#glow2-sm)"/>
+  <g stroke="white" stroke-width="3.5" stroke-linecap="round" fill="none">
+    <path d="M144,556 L150,563 L164,547"/>
+    <path d="M278,556 L284,563 L298,547"/>
+  </g>
+  <!-- X marks pour rouges/orange -->
+  <g stroke="white" stroke-width="3.5" stroke-linecap="round" fill="none">
+    <line x1="413" y1="547" x2="431" y2="565"/><line x1="431" y1="547" x2="413" y2="565"/>
+    <line x1="547" y1="547" x2="565" y2="565"/><line x1="565" y1="547" x2="547" y2="565"/>
+    <line x1="679" y1="547" x2="697" y2="565"/><line x1="697" y1="547" x2="679" y2="565"/>
+    <line x1="813" y1="547" x2="831" y2="565"/><line x1="831" y1="547" x2="813" y2="565"/>
+    <line x1="917" y1="547" x2="935" y2="565"/><line x1="935" y1="547" x2="917" y2="565"/>
+  </g>
+
+  <!-- Semaine 3 — presque tout rouge -->
+  <text x="108" y="618" font-family="Inter,sans-serif" font-size="16" font-weight="700"
+        fill="rgba(253,212,220,0.4)">SEMAINE 3</text>
+  <circle cx="154" cy="658" r="24" fill="#F43F5E" opacity="0.55" filter="url(#glow2-sm)"/>
+  <circle cx="288" cy="658" r="20" fill="#F43F5E" opacity="0.4"/>
+  <circle cx="422" cy="658" r="18" fill="#F43F5E" opacity="0.35"/>
+  <circle cx="556" cy="658" r="16" fill="#F43F5E" opacity="0.28"/>
+  <circle cx="688" cy="658" r="14" fill="#F43F5E" opacity="0.22"/>
+  <circle cx="822" cy="658" r="12" fill="#F43F5E" opacity="0.16"/>
+  <circle cx="926" cy="658" r="10" fill="#F43F5E" opacity="0.12"/>
+  <!-- X semaine 3 -->
+  <g stroke="rgba(248,113,113,0.6)" stroke-width="3" stroke-linecap="round" fill="none">
+    <line x1="145" y1="649" x2="163" y2="667"/><line x1="163" y1="649" x2="145" y2="667"/>
+    <line x1="279" y1="649" x2="297" y2="667"/><line x1="297" y1="649" x2="279" y2="667"/>
+  </g>
+
+  <!-- Flèche vers le bas (tendance) -->
+  <g filter="url(#glow2)" opacity="0.6">
+    <path d="M880,430 C900,500 900,580 880,650" stroke="#F43F5E" stroke-width="3"
+          fill="none" stroke-dasharray="8,5" stroke-linecap="round" marker-end="url(#arr)"/>
+  </g>
+
+  <!-- ══ FEMME ABATTUE (tête baissée) ══ -->
+  <g transform="translate(540,1200)" opacity="0.85">
+    <!-- Ombre -->
+    <ellipse cx="0" cy="360" rx="120" ry="20" fill="#000" opacity="0.25" filter="url(#blur2-md)"/>
+
+    <!-- Jambes (assise, légèrement fléchies) -->
+    <path d="M-30,200 C-40,260 -45,310 -42,358" stroke="#D4A876" stroke-width="30" stroke-linecap="round" fill="none"/>
+    <path d="M30,200 C40,260 45,310 42,358"    stroke="#D4A876" stroke-width="30" stroke-linecap="round" fill="none"/>
+    <!-- Pieds -->
+    <path d="M-42,356 C-55,368 -72,368 -80,360" stroke="#9D174D" stroke-width="22" stroke-linecap="round" fill="none"/>
+    <path d="M42,356 C55,368 72,368 80,360"    stroke="#9D174D" stroke-width="22" stroke-linecap="round" fill="none"/>
+
+    <!-- Jupe -->
+    <path d="M-52,140 C-68,170 -70,200 -68,210 L68,210 C70,200 68,170 52,140 Z" fill="url(#sk2b)"/>
+    <!-- Haut (épaules affaissées) -->
+    <path d="M-44,-25 C-60,10 -62,88 -52,140 L52,140 C62,88 60,10 44,-25 Z" fill="url(#cl2)"/>
+
+    <!-- Bras gauche affaissé vers le bas -->
+    <path d="M-44,-16 C-70,20 -82,80 -80,130" stroke="#D4A876" stroke-width="26" stroke-linecap="round" fill="none"/>
+    <circle cx="-80" cy="132" r="16" fill="#D4A876"/>
+
+    <!-- Bras droit affaissé -->
+    <path d="M44,-16 C70,20 82,80 80,130" stroke="#D4A876" stroke-width="26" stroke-linecap="round" fill="none"/>
+    <circle cx="80" cy="132" r="16" fill="#D4A876"/>
+
+    <!-- Cou -->
+    <rect x="-13" y="-48" width="26" height="28" rx="7" fill="#C49A6C"/>
+
+    <!-- Cheveux arrière -->
+    <ellipse cx="0" cy="-90" rx="56" ry="66" fill="#2D1040"/>
+    <path d="M-54,-122 C-68,-72 -72,8 -68,98"  stroke="#2D1040" stroke-width="34" stroke-linecap="round" fill="none"/>
+    <path d="M54,-122 C68,-72 72,8 68,98"       stroke="#2D1040" stroke-width="34" stroke-linecap="round" fill="none"/>
+
+    <!-- Visage (incliné vers le bas) -->
+    <circle cx="0" cy="-88" r="50" fill="#D4A876"/>
+    <ellipse cx="-5" cy="-94" rx="32" ry="36" fill="#E8C49A" opacity="0.4"/>
+
+    <!-- Yeux (fermés / baissés, triste) -->
+    <path d="M-23,-96 C-16,-90 -10,-90 -8,-95"  stroke="#2D1040" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M8,-95 C10,-90 16,-90 23,-96"       stroke="#2D1040" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <!-- Larme gauche -->
+    <ellipse cx="-16" cy="-80" rx="3" ry="5" fill="#C084FC" opacity="0.6"/>
+
+    <!-- Bouche (vers le bas) -->
+    <path d="M-11,-68 C-5,-73 5,-73 11,-68" stroke="#B8894E" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+    <!-- Sourcils froncés -->
+    <path d="M-22,-112 C-14,-117 -7,-115 -5,-110" stroke="#2D1040" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M5,-110 C7,-115 14,-117 22,-112"      stroke="#2D1040" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+    <!-- Cheveux avant -->
+    <path d="M-54,-114 C-42,-158 -22,-172 0,-172 C22,-172 42,-158 54,-114" fill="#2D1040"/>
+    <path d="M-18,-170 C-14,-148 -18,-128 -22,-108" stroke="#2D1040" stroke-width="11" fill="none" stroke-linecap="round" opacity="0.7"/>
+
+    <!-- Bulle "emoji 😞" -->
+    <circle cx="130" cy="-140" r="38" fill="#1A0414" stroke="#F43F5E" stroke-width="2" stroke-opacity="0.4" opacity="0.9"/>
+    <path d="M100,-115 L118,-108" stroke="#F43F5E" stroke-width="2" fill="none" opacity="0.5"/>
+    <text x="130" y="-128" text-anchor="middle" font-size="32">😞</text>
+  </g>
+
+  <!-- Particules -->
+  <g filter="url(#glow2-sm)" opacity="0.7">
+    <circle cx="92"  cy="300" r="3"   fill="#F43F5E"/>
+    <circle cx="248" cy="240" r="2.5" fill="#C084FC"/>
+    <circle cx="920" cy="340" r="3"   fill="#F43F5E"/>
+    <circle cx="980" cy="180" r="2"   fill="#FDA4AF"/>
+    <circle cx="120" cy="1400" r="2"  fill="#C084FC" opacity="0.45"/>
+    <circle cx="960" cy="1350" r="2.5" fill="#F43F5E" opacity="0.4"/>
+  </g>
+
+  <!-- Étoiles -->
+  <circle cx="100" cy="165" r="1.5" fill="white" opacity="0.4"/>
+  <circle cx="320" cy="95"  r="1"   fill="white" opacity="0.3"/>
+  <circle cx="740" cy="128" r="1.5" fill="white" opacity="0.38"/>
+  <circle cx="960" cy="108" r="1"   fill="white" opacity="0.3"/>
+  <circle cx="480" cy="155" r="1.5" fill="#FDA4AF" opacity="0.55"/>
+
+  <!-- Vignette -->
+  <defs>
+    <radialGradient id="vig2" cx="50%" cy="50%" r="68%">
+      <stop offset="0%"   stop-color="transparent"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.78"/>
+    </radialGradient>
+  </defs>
+  <rect width="1080" height="1920" fill="url(#vig2)"/>
+</svg>

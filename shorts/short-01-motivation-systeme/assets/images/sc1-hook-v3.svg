@@ -1,0 +1,199 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
+  <defs>
+    <radialGradient id="bg1" cx="50%" cy="38%" r="72%">
+      <stop offset="0%"   stop-color="#1E0F38"/>
+      <stop offset="55%"  stop-color="#0F0820"/>
+      <stop offset="100%" stop-color="#060210"/>
+    </radialGradient>
+    <radialGradient id="g-rose" cx="28%" cy="58%" r="42%">
+      <stop offset="0%"   stop-color="#F43F5E" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+    <radialGradient id="g-lav" cx="74%" cy="44%" r="38%">
+      <stop offset="0%"   stop-color="#C084FC" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+    <radialGradient id="g-gold" cx="50%" cy="20%" r="32%">
+      <stop offset="0%"   stop-color="#FBBF24" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+    <linearGradient id="cl" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#9333EA"/>
+      <stop offset="100%" stop-color="#6B21A8"/>
+    </linearGradient>
+    <linearGradient id="sk2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#5B21B6"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="9" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-sm" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="blur-xl"><feGaussianBlur stdDeviation="75"/></filter>
+    <filter id="blur-md"><feGaussianBlur stdDeviation="30"/></filter>
+  </defs>
+
+  <!-- FOND -->
+  <rect width="1080" height="1920" fill="url(#bg1)"/>
+  <rect width="1080" height="1920" fill="url(#g-rose)"/>
+  <rect width="1080" height="1920" fill="url(#g-lav)"/>
+  <rect width="1080" height="1920" fill="url(#g-gold)"/>
+
+  <!-- Halos atmosphériques -->
+  <ellipse cx="220" cy="950"  rx="380" ry="300" fill="#F43F5E" opacity="0.06" filter="url(#blur-xl)"/>
+  <ellipse cx="860" cy="750"  rx="320" ry="280" fill="#C084FC" opacity="0.07" filter="url(#blur-xl)"/>
+  <ellipse cx="540" cy="380"  rx="280" ry="200" fill="#FBBF24" opacity="0.06" filter="url(#blur-xl)"/>
+
+  <!-- ══ ICÔNE MOTIVATION (gauche) — éclair brisé ══ -->
+  <g transform="translate(200,620)" filter="url(#glow)" opacity="0.85">
+    <path d="M0,-58 L20,-8 L8,-8 L26,58 L5,10 L20,10 Z" fill="#F43F5E"/>
+    <line x1="8" y1="-8" x2="-8" y2="8" stroke="#0F0820" stroke-width="5"/>
+    <circle cx="0" cy="0" r="72" fill="none" stroke="#F43F5E" stroke-width="2.5"
+            stroke-dasharray="10,6" opacity="0.45"/>
+  </g>
+  <!-- Badge MOTIVATION -->
+  <rect x="105" y="700" width="196" height="46" rx="12"
+        fill="#F43F5E" fill-opacity="0.12" stroke="#F43F5E" stroke-width="1.5" stroke-opacity="0.4"/>
+  <text x="203" y="729" text-anchor="middle" font-family="Inter,sans-serif"
+        font-size="22" font-weight="900" fill="#F43F5E">MOTIVATION</text>
+  <text x="203" y="752" text-anchor="middle" font-family="Inter,sans-serif"
+        font-size="15" font-weight="600" fill="rgba(253,212,220,0.55)">imprévisible</text>
+
+  <!-- ══ ICÔNE SYSTÈME (droite) — engrenage ══ -->
+  <g transform="translate(880,620)" filter="url(#glow)" opacity="0.85">
+    <circle cx="0" cy="0" r="32" fill="none" stroke="#FBBF24" stroke-width="6"/>
+    <circle cx="0" cy="0" r="15" fill="#FBBF24" opacity="0.25"/>
+    <circle cx="0" cy="0" r="9"  fill="#FBBF24"/>
+    <!-- dents -->
+    <rect x="-6" y="-46" width="12" height="18" rx="3" fill="#FBBF24"/>
+    <rect x="-6" y="28"  width="12" height="18" rx="3" fill="#FBBF24"/>
+    <rect x="-46" y="-6" width="18" height="12" rx="3" fill="#FBBF24"/>
+    <rect x="28"  y="-6" width="18" height="12" rx="3" fill="#FBBF24"/>
+    <rect x="-34" y="-34" width="12" height="12" rx="3" fill="#FBBF24" transform="rotate(45,-28,-28)"/>
+    <rect x="22"  y="-34" width="12" height="12" rx="3" fill="#FBBF24" transform="rotate(45,28,-28)"/>
+    <rect x="-34" y="22"  width="12" height="12" rx="3" fill="#FBBF24" transform="rotate(45,-28,28)"/>
+    <rect x="22"  y="22"  width="12" height="12" rx="3" fill="#FBBF24" transform="rotate(45,28,28)"/>
+  </g>
+  <!-- Badge SYSTÈME -->
+  <rect x="793" y="700" width="174" height="46" rx="12"
+        fill="#FBBF24" fill-opacity="0.12" stroke="#FBBF24" stroke-width="1.5" stroke-opacity="0.4"/>
+  <text x="880" y="729" text-anchor="middle" font-family="Inter,sans-serif"
+        font-size="22" font-weight="900" fill="#FBBF24">SYSTÈME</text>
+  <text x="880" y="752" text-anchor="middle" font-family="Inter,sans-serif"
+        font-size="15" font-weight="600" fill="rgba(251,226,150,0.55)">prévisible</text>
+
+  <!-- Signe ≠ central -->
+  <text x="540" y="668" text-anchor="middle" font-family="Inter,sans-serif"
+        font-size="52" font-weight="900" fill="rgba(253,244,255,0.12)">≠</text>
+  <!-- Points d'interrogation flottants -->
+  <text x="348" y="510" font-family="sans-serif" font-size="34" fill="#C084FC" opacity="0.55"
+        filter="url(#glow-sm)">?</text>
+  <text x="716" y="556" font-family="sans-serif" font-size="26" fill="#C084FC" opacity="0.42"
+        filter="url(#glow-sm)">?</text>
+  <text x="466" y="475" font-family="sans-serif" font-size="20" fill="#FDA4AF" opacity="0.5"
+        filter="url(#glow-sm)">?</text>
+
+  <!-- ══ FEMME — pose pensive (main sur le menton) ══ -->
+  <g transform="translate(540,1090)" opacity="0.88">
+    <!-- Ombre sol -->
+    <ellipse cx="0" cy="432" rx="132" ry="24" fill="#000" opacity="0.28" filter="url(#blur-md)"/>
+
+    <!-- Jambes -->
+    <path d="M-24,292 L-28,430" stroke="#D4A876" stroke-width="32" stroke-linecap="round" fill="none"/>
+    <path d="M24,292 L28,430"  stroke="#D4A876" stroke-width="32" stroke-linecap="round" fill="none"/>
+    <!-- Chaussures -->
+    <path d="M-28,428 C-44,442 -66,444 -76,436" stroke="#4C1D95" stroke-width="24" stroke-linecap="round" fill="none"/>
+    <path d="M28,428 C44,442 66,444 76,436"   stroke="#4C1D95" stroke-width="24" stroke-linecap="round" fill="none"/>
+
+    <!-- Jupe -->
+    <path d="M-54,172 C-70,214 -74,268 -70,292 L70,292 C74,268 70,214 54,172 Z" fill="url(#sk2)"/>
+    <!-- Haut -->
+    <path d="M-42,-18 C-56,18 -58,98 -54,172 L54,172 C58,98 56,18 42,-18 Z" fill="url(#cl)"/>
+
+    <!-- Bras gauche levé vers menton (pensif) -->
+    <path d="M-42,-8 C-52,-22 -58,-38 -62,-48" stroke="#D4A876" stroke-width="26" stroke-linecap="round" fill="none"/>
+    <!-- Main gauche (poing sous le menton) -->
+    <circle cx="-62" cy="-50" r="17" fill="#E8C49A"/>
+
+    <!-- Bras droit relaxe -->
+    <path d="M42,-8 C64,24 74,84 72,132" stroke="#D4A876" stroke-width="26" stroke-linecap="round" fill="none"/>
+    <circle cx="72" cy="134" r="17" fill="#D4A876"/>
+
+    <!-- Cou -->
+    <rect x="-13" y="-50" width="26" height="34" rx="8" fill="#C49A6C"/>
+
+    <!-- Cheveux arrière (longs) -->
+    <ellipse cx="0" cy="-94" rx="58" ry="68" fill="#2D1040"/>
+    <path d="M-56,-128 C-70,-76 -76,2 -74,102"  stroke="#2D1040" stroke-width="34" stroke-linecap="round" fill="none"/>
+    <path d="M56,-128 C70,-76 76,2 74,102"       stroke="#2D1040" stroke-width="34" stroke-linecap="round" fill="none"/>
+
+    <!-- Visage -->
+    <circle cx="0" cy="-94" r="52" fill="#D4A876"/>
+    <ellipse cx="-6" cy="-100" rx="34" ry="38" fill="#E8C49A" opacity="0.42"/>
+
+    <!-- Yeux -->
+    <circle cx="-17" cy="-100" r="7.5" fill="#2D1040"/>
+    <circle cx="17"  cy="-100" r="7.5" fill="#2D1040"/>
+    <circle cx="-14" cy="-103" r="2.5" fill="white" opacity="0.9"/>
+    <circle cx="20"  cy="-103" r="2.5" fill="white" opacity="0.9"/>
+    <circle cx="-17" cy="-100" r="4"   fill="#7C4A2A" opacity="0.55"/>
+    <circle cx="17"  cy="-100" r="4"   fill="#7C4A2A" opacity="0.55"/>
+
+    <!-- Sourcils (sourcil gauche relevé = questionnement) -->
+    <path d="M-25,-117 C-16,-125 -7,-123 -5,-118" stroke="#2D1040" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <path d="M5,-120 C7,-126 18,-125 25,-118"      stroke="#2D1040" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+
+    <!-- Nez -->
+    <path d="M-4,-83 C0,-76 4,-83" stroke="#B8894E" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <!-- Bouche (légèrement serrée) -->
+    <path d="M-12,-72 C-5,-68 5,-68 12,-72" stroke="#B8894E" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+    <!-- Cheveux avant (frange) -->
+    <path d="M-56,-118 C-44,-162 -22,-176 0,-176 C22,-176 44,-162 56,-118" fill="#2D1040"/>
+    <path d="M-20,-174 C-16,-150 -20,-130 -24,-110" stroke="#2D1040" stroke-width="11" fill="none" stroke-linecap="round" opacity="0.7"/>
+  </g>
+
+  <!-- Étoiles / particules -->
+  <g filter="url(#glow-sm)" opacity="0.75">
+    <circle cx="88"  cy="350" r="3.5" fill="#F43F5E"/>
+    <circle cx="238" cy="278" r="2.5" fill="#C084FC"/>
+    <circle cx="182" cy="518" r="2"   fill="#FBBF24"/>
+    <circle cx="918" cy="395" r="3"   fill="#C084FC"/>
+    <circle cx="978" cy="558" r="2.5" fill="#F43F5E"/>
+    <circle cx="842" cy="298" r="2"   fill="#FBBF24"/>
+    <circle cx="118" cy="1148" r="2"  fill="#C084FC" opacity="0.5"/>
+    <circle cx="962" cy="1048" r="2.5" fill="#F43F5E" opacity="0.5"/>
+    <circle cx="58"  cy="1398" r="2"  fill="#FBBF24" opacity="0.35"/>
+    <circle cx="1020" cy="1382" r="2" fill="#C084FC" opacity="0.35"/>
+  </g>
+
+  <!-- Étincelles 4 branches -->
+  <g filter="url(#glow)" opacity="0.68">
+    <path d="M162,782 L165,772 L168,782 L178,785 L168,788 L165,798 L162,788 L152,785 Z" fill="#F43F5E"/>
+    <path d="M282,542 L284,535 L286,542 L293,544 L286,546 L284,553 L282,546 L275,544 Z" fill="#FDA4AF"/>
+    <path d="M902,742 L905,732 L908,742 L918,745 L908,748 L905,758 L902,748 L892,745 Z" fill="#FBBF24"/>
+    <path d="M778,582 L780,575 L782,582 L789,584 L782,586 L780,593 L778,586 L771,584 Z" fill="#FBBF24" opacity="0.7"/>
+    <path d="M442,482 L444,477 L446,482 L451,483 L446,484 L444,489 L442,484 L437,483 Z" fill="#C084FC"/>
+  </g>
+
+  <!-- Étoiles distantes -->
+  <circle cx="102" cy="162" r="1.5" fill="white" opacity="0.45"/>
+  <circle cx="322" cy="92"  r="1"   fill="white" opacity="0.35"/>
+  <circle cx="742" cy="132" r="1.5" fill="white" opacity="0.4"/>
+  <circle cx="962" cy="102" r="1"   fill="white" opacity="0.35"/>
+  <circle cx="482" cy="152" r="1.5" fill="#FDA4AF" opacity="0.6"/>
+  <circle cx="622" cy="82"  r="1"   fill="#C084FC" opacity="0.7"/>
+
+  <!-- Vignette -->
+  <defs>
+    <radialGradient id="vig1" cx="50%" cy="50%" r="68%">
+      <stop offset="0%"   stop-color="transparent"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.75"/>
+    </radialGradient>
+  </defs>
+  <rect width="1080" height="1920" fill="url(#vig1)"/>
+</svg>
