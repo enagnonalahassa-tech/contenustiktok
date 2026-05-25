@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
+  <defs>
+    <!-- Fond principal -->
+    <radialGradient id="bg1" cx="38%" cy="35%" r="65%">
+      <stop offset="0%"   stop-color="#0d3326"/>
+      <stop offset="45%"  stop-color="#0a1f3a"/>
+      <stop offset="100%" stop-color="#040810"/>
+    </radialGradient>
+    <radialGradient id="bg2" cx="70%" cy="72%" r="50%">
+      <stop offset="0%"   stop-color="#0a2a1a"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+
+    <!-- Glow vert central -->
+    <radialGradient id="glow-c" cx="50%" cy="42%" r="38%">
+      <stop offset="0%"   stop-color="#22C55E" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#22C55E" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Filtre glow éclair -->
+    <filter id="glow-spark" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-soft" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="blur-heavy">
+      <feGaussianBlur stdDeviation="55"/>
+    </filter>
+
+    <!-- Grain -->
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="4" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feBlend in="SourceGraphic" mode="overlay" result="blend"/>
+    </filter>
+  </defs>
+
+  <!-- Fond -->
+  <rect width="1080" height="1920" fill="url(#bg1)"/>
+  <rect width="1080" height="1920" fill="url(#bg2)"/>
+  <rect width="1080" height="1920" fill="url(#glow-c)"/>
+
+  <!-- Halos doux en arrière-plan -->
+  <ellipse cx="200" cy="480" rx="320" ry="320" fill="#22C55E" opacity="0.07" filter="url(#blur-heavy)"/>
+  <ellipse cx="880" cy="1300" rx="280" ry="280" fill="#6366F1" opacity="0.08" filter="url(#blur-heavy)"/>
+  <ellipse cx="540" cy="900" rx="380" ry="240" fill="#22C55E" opacity="0.05" filter="url(#blur-heavy)"/>
+
+  <!-- Lignes lumineuses horizontales (data stream) -->
+  <line x1="0" y1="620"  x2="1080" y2="610"  stroke="#22C55E" stroke-width="1" opacity="0.08"/>
+  <line x1="0" y1="840"  x2="1080" y2="855"  stroke="#22C55E" stroke-width="0.5" opacity="0.06"/>
+  <line x1="0" y1="1100" x2="1080" y2="1090" stroke="#22C55E" stroke-width="1" opacity="0.07"/>
+  <line x1="0" y1="1400" x2="1080" y2="1415" stroke="#22C55E" stroke-width="0.5" opacity="0.05"/>
+  <line x1="0" y1="320"  x2="1080" y2="308"  stroke="#6366F1" stroke-width="0.5" opacity="0.07"/>
+
+  <!-- Éclairs principaux -->
+  <g filter="url(#glow-spark)" opacity="0.9">
+    <!-- Éclair 1 — grand, centre gauche -->
+    <polyline points="360,180 290,420 380,420 240,780 340,780 180,1100"
+              fill="none" stroke="#22C55E" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <polyline points="360,180 290,420 380,420 240,780 340,780 180,1100"
+              fill="none" stroke="#fff" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.6"/>
+  </g>
+
+  <g filter="url(#glow-spark)" opacity="0.75">
+    <!-- Éclair 2 — droite -->
+    <polyline points="780,340 850,560 760,560 900,820 800,820 920,1060"
+              fill="none" stroke="#22C55E" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    <polyline points="780,340 850,560 760,560 900,820 800,820 920,1060"
+              fill="none" stroke="#fff" stroke-width="0.6" stroke-linejoin="round" stroke-linecap="round" opacity="0.5"/>
+  </g>
+
+  <g filter="url(#glow-spark)" opacity="0.55">
+    <!-- Éclair 3 — petit, milieu bas -->
+    <polyline points="540,900 490,1020 560,1020 480,1180"
+              fill="none" stroke="#22C55E" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+  </g>
+
+  <!-- Particules / points lumineux -->
+  <g filter="url(#glow-soft)" opacity="0.8">
+    <circle cx="140"  cy="300"  r="3"   fill="#22C55E"/>
+    <circle cx="460"  cy="180"  r="2"   fill="#22C55E"/>
+    <circle cx="720"  cy="250"  r="4"   fill="#22C55E"/>
+    <circle cx="960"  cy="420"  r="2.5" fill="#22C55E"/>
+    <circle cx="80"   cy="680"  r="2"   fill="#22C55E" opacity="0.7"/>
+    <circle cx="980"  cy="740"  r="3.5" fill="#22C55E"/>
+    <circle cx="300"  cy="1050" r="2"   fill="#22C55E" opacity="0.6"/>
+    <circle cx="760"  cy="1200" r="3"   fill="#22C55E"/>
+    <circle cx="50"   cy="1400" r="2"   fill="#22C55E" opacity="0.5"/>
+    <circle cx="1020" cy="1180" r="2"   fill="#22C55E" opacity="0.6"/>
+    <circle cx="580"  cy="1600" r="3"   fill="#22C55E" opacity="0.4"/>
+    <circle cx="200"  cy="1750" r="2"   fill="#22C55E" opacity="0.3"/>
+    <circle cx="870"  cy="1680" r="2.5" fill="#6366F1" opacity="0.6"/>
+    <circle cx="640"  cy="440"  r="5"   fill="#22C55E" opacity="0.9"/>
+    <circle cx="420"  cy="700"  r="3"   fill="#22C55E" opacity="0.7"/>
+    <circle cx="820"  cy="960"  r="2"   fill="#22C55E" opacity="0.6"/>
+  </g>
+
+  <!-- Lignes obliques décoratives -->
+  <line x1="0"    y1="0"    x2="180" y2="320"  stroke="#22C55E" stroke-width="0.6" opacity="0.12"/>
+  <line x1="1080" y1="0"    x2="900" y2="350"  stroke="#22C55E" stroke-width="0.6" opacity="0.10"/>
+  <line x1="0"    y1="1920" x2="200" y2="1580" stroke="#22C55E" stroke-width="0.5" opacity="0.10"/>
+
+  <!-- Vignette finale -->
+  <defs>
+    <radialGradient id="vig" cx="50%" cy="50%" r="72%">
+      <stop offset="0%"   stop-color="transparent"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.72"/>
+    </radialGradient>
+  </defs>
+  <rect width="1080" height="1920" fill="url(#vig)"/>
+
+  <!-- Grain film -->
+  <rect width="1080" height="1920" fill="#888" opacity="0.022" filter="url(#grain)"/>
+</svg>

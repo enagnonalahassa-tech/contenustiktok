@@ -1,0 +1,154 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
+  <defs>
+    <radialGradient id="bg-5" cx="50%" cy="48%" r="70%">
+      <stop offset="0%"   stop-color="#051a0d"/>
+      <stop offset="55%"  stop-color="#04100a"/>
+      <stop offset="100%" stop-color="#020608"/>
+    </radialGradient>
+    <!-- Grand halo central vert émeraude -->
+    <radialGradient id="halo-main" cx="50%" cy="45%" r="52%">
+      <stop offset="0%"   stop-color="#059669" stop-opacity="0.35"/>
+      <stop offset="50%"  stop-color="#22C55E" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+    <!-- Halo secondaire (profondeur) -->
+    <radialGradient id="halo-sec" cx="50%" cy="72%" r="38%">
+      <stop offset="0%"   stop-color="#16a34a" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+    <!-- Silhouette gradient -->
+    <linearGradient id="sil5" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#4ade80" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#059669" stop-opacity="0.5"/>
+    </linearGradient>
+    <filter id="glow-5" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="9" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="blur-xl">
+      <feGaussianBlur stdDeviation="70"/>
+    </filter>
+    <filter id="blur-soft">
+      <feGaussianBlur stdDeviation="25"/>
+    </filter>
+    <filter id="glow-ring">
+      <feGaussianBlur stdDeviation="12" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Fond -->
+  <rect width="1080" height="1920" fill="url(#bg-5)"/>
+  <rect width="1080" height="1920" fill="url(#halo-main)"/>
+  <rect width="1080" height="1920" fill="url(#halo-sec)"/>
+
+  <!-- Halos diffus -->
+  <ellipse cx="540"  cy="860"  rx="420" ry="360" fill="#22C55E" opacity="0.10" filter="url(#blur-xl)"/>
+  <ellipse cx="200"  cy="400"  rx="220" ry="180" fill="#059669" opacity="0.08" filter="url(#blur-xl)"/>
+  <ellipse cx="880"  cy="1400" rx="200" ry="160" fill="#16a34a" opacity="0.07" filter="url(#blur-xl)"/>
+
+  <!-- Anneaux concentriques (énergie irradiante) -->
+  <g filter="url(#glow-ring)" opacity="0.22">
+    <circle cx="540" cy="860" r="200" fill="none" stroke="#22C55E" stroke-width="2"/>
+    <circle cx="540" cy="860" r="320" fill="none" stroke="#22C55E" stroke-width="1.5"/>
+    <circle cx="540" cy="860" r="450" fill="none" stroke="#22C55E" stroke-width="1"/>
+    <circle cx="540" cy="860" r="600" fill="none" stroke="#22C55E" stroke-width="0.7"/>
+  </g>
+
+  <!-- Silhouette bras ouverts — faceless, stylisée -->
+  <g transform="translate(540, 640)" opacity="0.75">
+    <!-- Ombre sol -->
+    <ellipse cx="0" cy="420" rx="100" ry="20" fill="#000" opacity="0.3" filter="url(#blur-soft)"/>
+
+    <!-- Jambe gauche -->
+    <path d="M-15,230 C-25,300 -35,360 -40,420" stroke="url(#sil5)" stroke-width="26"
+          fill="none" stroke-linecap="round"/>
+    <!-- Pied gauche -->
+    <path d="M-40,420 C-50,428 -70,430 -80,424" stroke="url(#sil5)" stroke-width="16"
+          fill="none" stroke-linecap="round"/>
+
+    <!-- Jambe droite -->
+    <path d="M15,230 C25,300 35,360 40,420" stroke="url(#sil5)" stroke-width="26"
+          fill="none" stroke-linecap="round"/>
+    <!-- Pied droite -->
+    <path d="M40,420 C50,428 70,430 80,424" stroke="url(#sil5)" stroke-width="16"
+          fill="none" stroke-linecap="round"/>
+
+    <!-- Corps -->
+    <path d="M0,60 C0,110 0,170 0,230" stroke="url(#sil5)" stroke-width="34"
+          fill="none" stroke-linecap="round"/>
+
+    <!-- Bras gauche ouvert, légèrement levé -->
+    <path d="M-22,100 C-80,120 -160,100 -240,80" stroke="url(#sil5)" stroke-width="20"
+          fill="none" stroke-linecap="round"/>
+    <!-- Main gauche -->
+    <circle cx="-240" cy="80" r="16" fill="url(#sil5)" opacity="0.9"/>
+
+    <!-- Bras droit ouvert -->
+    <path d="M22,100 C80,120 160,100 240,80" stroke="url(#sil5)" stroke-width="20"
+          fill="none" stroke-linecap="round"/>
+    <!-- Main droite -->
+    <circle cx="240" cy="80" r="16" fill="url(#sil5)" opacity="0.9"/>
+
+    <!-- Tête -->
+    <ellipse cx="0" cy="24" rx="34" ry="38" fill="url(#sil5)"/>
+  </g>
+
+  <!-- Rayons de lumière depuis la silhouette -->
+  <g filter="url(#glow-5)" opacity="0.18">
+    <line x1="540" y1="760" x2="60"   y2="200"  stroke="#22C55E" stroke-width="2"/>
+    <line x1="540" y1="760" x2="200"  y2="100"  stroke="#22C55E" stroke-width="1.5"/>
+    <line x1="540" y1="760" x2="400"  y2="60"   stroke="#22C55E" stroke-width="1"/>
+    <line x1="540" y1="760" x2="680"  y2="60"   stroke="#22C55E" stroke-width="1"/>
+    <line x1="540" y1="760" x2="880"  y2="100"  stroke="#22C55E" stroke-width="1.5"/>
+    <line x1="540" y1="760" x2="1020" y2="200"  stroke="#22C55E" stroke-width="2"/>
+    <line x1="540" y1="760" x2="60"   y2="1600" stroke="#22C55E" stroke-width="1"/>
+    <line x1="540" y1="760" x2="1020" y2="1600" stroke="#22C55E" stroke-width="1"/>
+  </g>
+
+  <!-- Particules lumineuses -->
+  <g filter="url(#glow-5)" opacity="0.8">
+    <circle cx="130"  cy="360"  r="3.5" fill="#4ade80"/>
+    <circle cx="300"  cy="240"  r="2.5" fill="#22C55E"/>
+    <circle cx="480"  cy="160"  r="4"   fill="#4ade80"/>
+    <circle cx="650"  cy="190"  r="2"   fill="#22C55E"/>
+    <circle cx="820"  cy="280"  r="3"   fill="#4ade80"/>
+    <circle cx="960"  cy="400"  r="2.5" fill="#22C55E"/>
+    <circle cx="80"   cy="620"  r="2"   fill="#22C55E" opacity="0.6"/>
+    <circle cx="1000" cy="580"  r="2"   fill="#22C55E" opacity="0.6"/>
+    <circle cx="200"  cy="1200" r="3"   fill="#22C55E" opacity="0.5"/>
+    <circle cx="880"  cy="1100" r="2.5" fill="#22C55E" opacity="0.5"/>
+    <circle cx="320"  cy="1500" r="2"   fill="#22C55E" opacity="0.35"/>
+    <circle cx="760"  cy="1600" r="2"   fill="#22C55E" opacity="0.3"/>
+    <circle cx="50"   cy="900"  r="4"   fill="#4ade80" opacity="0.5"/>
+    <circle cx="1030" cy="820"  r="3"   fill="#4ade80" opacity="0.5"/>
+  </g>
+
+  <!-- Lignes horizontales fines (texture) -->
+  <g opacity="0.06">
+    <line x1="0" y1="400"  x2="1080" y2="400"  stroke="#22C55E" stroke-width="1"/>
+    <line x1="0" y1="700"  x2="1080" y2="700"  stroke="#22C55E" stroke-width="1"/>
+    <line x1="0" y1="1000" x2="1080" y2="1000" stroke="#22C55E" stroke-width="1"/>
+    <line x1="0" y1="1300" x2="1080" y2="1300" stroke="#22C55E" stroke-width="1"/>
+    <line x1="0" y1="1600" x2="1080" y2="1600" stroke="#22C55E" stroke-width="1"/>
+  </g>
+
+  <!-- Étoiles distantes -->
+  <circle cx="80"   cy="140"  r="1.5" fill="white" opacity="0.35"/>
+  <circle cx="260"  cy="80"   r="1"   fill="white" opacity="0.25"/>
+  <circle cx="700"  cy="60"   r="1.5" fill="white" opacity="0.3"/>
+  <circle cx="920"  cy="120"  r="1"   fill="white" opacity="0.25"/>
+  <circle cx="1060" cy="200"  r="1.5" fill="white" opacity="0.3"/>
+  <circle cx="440"  cy="100"  r="1"   fill="white" opacity="0.25"/>
+  <circle cx="60"   cy="280"  r="1"   fill="white" opacity="0.2"/>
+  <circle cx="1000" cy="340"  r="1"   fill="white" opacity="0.2"/>
+
+  <!-- Vignette -->
+  <defs>
+    <radialGradient id="vig5" cx="50%" cy="50%" r="68%">
+      <stop offset="0%"   stop-color="transparent"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.7"/>
+    </radialGradient>
+  </defs>
+  <rect width="1080" height="1920" fill="url(#vig5)"/>
+</svg>

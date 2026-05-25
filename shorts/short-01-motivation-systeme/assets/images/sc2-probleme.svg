@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
+  <defs>
+    <radialGradient id="bg-r" cx="50%" cy="55%" r="65%">
+      <stop offset="0%"   stop-color="#1a0808"/>
+      <stop offset="40%"  stop-color="#110510"/>
+      <stop offset="100%" stop-color="#040408"/>
+    </radialGradient>
+    <radialGradient id="glow-r1" cx="30%" cy="40%" r="45%">
+      <stop offset="0%"   stop-color="#7f1d1d" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+    <radialGradient id="glow-r2" cx="72%" cy="68%" r="40%">
+      <stop offset="0%"   stop-color="#991b1b" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+    <filter id="glow-f" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="blur-heavy">
+      <feGaussianBlur stdDeviation="60"/>
+    </filter>
+    <filter id="blur-med">
+      <feGaussianBlur stdDeviation="28"/>
+    </filter>
+  </defs>
+
+  <!-- Fond -->
+  <rect width="1080" height="1920" fill="url(#bg-r)"/>
+  <rect width="1080" height="1920" fill="url(#glow-r1)"/>
+  <rect width="1080" height="1920" fill="url(#glow-r2)"/>
+
+  <!-- Halos chauds -->
+  <ellipse cx="160" cy="560"  rx="300" ry="260" fill="#DC2626" opacity="0.08" filter="url(#blur-heavy)"/>
+  <ellipse cx="900" cy="900"  rx="250" ry="250" fill="#F97316" opacity="0.07" filter="url(#blur-heavy)"/>
+  <ellipse cx="400" cy="1400" rx="300" ry="200" fill="#DC2626" opacity="0.06" filter="url(#blur-heavy)"/>
+
+  <!-- Montagne russe — grande vague sinusoïdale -->
+  <!-- Vague principale (bas) -->
+  <path d="M-80,1380
+           C100,1100 260,1620 440,1300
+           C620,980  780,1540 960,1220
+           C1080,1000 1080,1000 1160,900"
+        fill="none" stroke="#EF4444" stroke-width="5" opacity="0.45" stroke-linecap="round"/>
+
+  <!-- Vague principale (milieu) -->
+  <path d="M-80,960
+           C80,680  260,1200 440,880
+           C620,560  800,1100 980,780
+           C1100,580 1080,560 1180,480"
+        fill="none" stroke="#EF4444" stroke-width="4" opacity="0.6" stroke-linecap="round" filter="url(#glow-f)"/>
+  <path d="M-80,960
+           C80,680  260,1200 440,880
+           C620,560  800,1100 980,780
+           C1100,580 1080,560 1180,480"
+        fill="none" stroke="#FCA5A5" stroke-width="1.5" opacity="0.4" stroke-linecap="round"/>
+
+  <!-- Vague haute (accent) -->
+  <path d="M-80,540
+           C100,320  240,700  440,440
+           C640,180  800,560  1000,320
+           C1080,200 1080,180 1180,120"
+        fill="none" stroke="#F87171" stroke-width="2.5" opacity="0.35" stroke-linecap="round" filter="url(#glow-f)"/>
+
+  <!-- Petite vague basse (fond) -->
+  <path d="M-80,1680
+           C120,1520 300,1820 500,1640
+           C700,1460 880,1760 1080,1600
+           C1140,1540 1160,1520 1200,1500"
+        fill="none" stroke="#EF4444" stroke-width="2.5" opacity="0.2" stroke-linecap="round"/>
+
+  <!-- Remplissage sous la vague du milieu -->
+  <path d="M-80,960
+           C80,680  260,1200 440,880
+           C620,560  800,1100 980,780
+           C1100,580 1080,560 1180,480
+           L1180,1920 L-80,1920 Z"
+        fill="#EF4444" opacity="0.04"/>
+
+  <!-- Lignes verticales oscillantes -->
+  <line x1="220" y1="0" x2="220" y2="1920" stroke="#EF4444" stroke-width="0.5" opacity="0.06"/>
+  <line x1="540" y1="0" x2="540" y2="1920" stroke="#EF4444" stroke-width="0.5" opacity="0.05"/>
+  <line x1="860" y1="0" x2="860" y2="1920" stroke="#EF4444" stroke-width="0.5" opacity="0.06"/>
+
+  <!-- Particules -->
+  <g filter="url(#glow-f)" opacity="0.8">
+    <circle cx="120"  cy="920"  r="4"   fill="#EF4444"/>
+    <circle cx="440"  cy="860"  r="5"   fill="#F87171"/>
+    <circle cx="780"  cy="780"  r="4"   fill="#EF4444"/>
+    <circle cx="220"  cy="1380" r="3"   fill="#F97316"/>
+    <circle cx="680"  cy="1240" r="3.5" fill="#EF4444"/>
+    <circle cx="940"  cy="1160" r="4"   fill="#F87171"/>
+    <circle cx="80"   cy="520"  r="3"   fill="#EF4444" opacity="0.7"/>
+    <circle cx="340"  cy="440"  r="2.5" fill="#EF4444" opacity="0.6"/>
+    <circle cx="660"  cy="380"  r="3"   fill="#F87171" opacity="0.7"/>
+    <circle cx="940"  cy="320"  r="2"   fill="#EF4444" opacity="0.6"/>
+    <circle cx="300"  cy="1680" r="2.5" fill="#F97316" opacity="0.4"/>
+    <circle cx="760"  cy="1720" r="2"   fill="#EF4444" opacity="0.3"/>
+  </g>
+
+  <!-- Points de pic / creux de la vague -->
+  <g filter="url(#glow-f)">
+    <circle cx="82"  cy="940" r="8" fill="#EF4444" opacity="0.7"/>
+    <circle cx="440" cy="870" r="9" fill="#F87171" opacity="0.8"/>
+    <circle cx="798" cy="780" r="8" fill="#EF4444" opacity="0.7"/>
+  </g>
+
+  <!-- Texte de fond subtil -->
+  <text x="540" y="1060" text-anchor="middle" font-family="monospace" font-size="180"
+        fill="#EF4444" opacity="0.025" font-weight="900">90%</text>
+
+  <!-- Vignette -->
+  <defs>
+    <radialGradient id="vig2" cx="50%" cy="50%" r="70%">
+      <stop offset="0%"   stop-color="transparent"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.75"/>
+    </radialGradient>
+  </defs>
+  <rect width="1080" height="1920" fill="url(#vig2)"/>
+</svg>
