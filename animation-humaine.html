@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animations Humaines — Nuit Satinée</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400;1,700&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #04020e;
+      min-height: 100vh;
+      width: 100vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      font-family: 'Outfit', sans-serif;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* ── Ambient glows de fond ─────────────────────────────────────────── */
+    .glow {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(110px);
+      pointer-events: none;
+      z-index: 0;
+      animation: drift 20s ease-in-out infinite alternate;
+    }
+    .g1 {
+      width: 480px; height: 480px;
+      background: radial-gradient(circle, rgba(109,40,217,0.35) 0%, transparent 70%);
+      top: -180px; left: -180px;
+    }
+    .g2 {
+      width: 360px; height: 360px;
+      background: radial-gradient(circle, rgba(190,24,93,0.25) 0%, transparent 70%);
+      bottom: -120px; right: -120px;
+      animation-direction: alternate-reverse;
+    }
+    @keyframes drift {
+      from { transform: translate(0, 0); }
+      to   { transform: translate(40px, 50px); }
+    }
+
+    /* ── Cadre 9:16 ────────────────────────────────────────────────────── */
+    .frame {
+      position: relative;
+      z-index: 1;
+      aspect-ratio: 9/16;
+      height: 90vh;
+      max-height: 720px;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.04),
+        0 40px 80px rgba(0,0,0,0.7),
+        0 0 80px rgba(109,40,217,0.15);
+    }
+
+    /* ── Scènes ────────────────────────────────────────────────────────── */
+    .scene {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .scene.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Fonds distincts pour chaque scène */
+    #sc1 { background: linear-gradient(165deg, #1e0835 0%, #2d0e40 45%, #140422 100%); }
+    #sc2 { background: linear-gradient(165deg, #080d2e 0%, #0f1452 45%, #06081e 100%); }
+    #sc3 { background: linear-gradient(165deg, #17042c 0%, #240838 50%, #0c0420 100%); }
+
+    /* Grain satiné */
+    .scene::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      background-size: 180px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Zone SVG figure ───────────────────────────────────────────────── */
+    .figure-area {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding-top: 2.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .figure-svg {
+      width: 72%;
+      max-width: 200px;
+      overflow: visible;
+    }
+
+    /* ── Zone texte ────────────────────────────────────────────────────── */
+    .text-area {
+      width: 100%;
+      padding: 1.2rem 2rem 3rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.65rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .scene-label {
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(251, 113, 133, 0.45);
+    }
+
+    .ornament {
+      width: 38px; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(251,113,133,0.45), transparent);
+    }
+
+    .scene-quote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1rem, 2.8vh, 1.45rem);
+      line-height: 1.5;
+      color: #EDE9FE;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    }
+
+    .scene-quote em {
+      color: #FB7185;
+      font-style: normal;
+      font-weight: 700;
+      filter: drop-shadow(0 0 8px rgba(251,113,133,0.4));
+    }
+
+    /* ── Dots de progression ───────────────────────────────────────────── */
+    .dots {
+      position: absolute;
+      bottom: 1.1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+    .dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      transition: all 0.4s ease;
+    }
+    .dot.active {
+      width: 20px;
+      border-radius: 3px;
+      background: #FB7185;
+      box-shadow: 0 0 10px rgba(251,113,133,0.55);
+    }
+
+    /* Hint navigation */
+    .hint {
+      position: absolute;
+      bottom: 4.2rem;
+      width: 100%;
+      text-align: center;
+      font-size: 0.6rem;
+      color: rgba(255,255,255,0.18);
+      letter-spacing: 0.08em;
+      z-index: 10;
+      transition: opacity 1.2s ease;
+    }
+    .hint.gone { opacity: 0; pointer-events: none; }
+
+
+    /* ══════════════════════════════════════════════════════════════════════
+       ANIMATIONS SCÈNE 1 — LA FLAMME
+       Figure debout, bras légèrement ouverts, corps qui vacille doucement
+    ══════════════════════════════════════════════════════════════════════ */
+    @keyframes flame-sway {
+      0%,100% { transform: rotate(-3deg) translateX(-3px); }
+      33%     { transform: rotate(2.5deg) translateX(4px); }
+      66%     { transform: rotate(-1deg) translateX(-1px); }
+    }
+    @keyframes hair-drift {
+      0%,100% { transform: rotate(-5deg) skewX(-3deg); }
+      50%     { transform: rotate(7deg)  skewX(5deg); }
+    }
+    @keyframes flicker {
+      0%,100% { opacity: 0.85; }
+      25%     { opacity: 1; }
+      55%     { opacity: 0.9; }
+      80%     { opacity: 0.75; }
+    }
+
+    #sc1 .fig-main   { transform-origin: 100px 322px; animation: flame-sway 4.5s ease-in-out infinite; }
+    #sc1 .fig-hair   { transform-origin: 100px 52px;  animation: hair-drift 3.8s ease-in-out infinite; }
+    #sc1 .fig-glow   { animation: flicker 2.8s ease-in-out infinite; }
+
+
+    /* ══════════════════════════════════════════════════════════════════════
+       ANIMATIONS SCÈNE 2 — LA FONDATION
+       Figure qui s'élève depuis le bas, lentement, avec confiance
+    ══════════════════════════════════════════════════════════════════════ */
+    @keyframes rise-up {
+      0%   { transform: translateY(75px) scaleY(0.68) scaleX(1.1); opacity: 0.25; }
+      65%  { transform: translateY(0) scaleY(1) scaleX(1); opacity: 1; }
+      82%  { transform: translateY(-5px) scaleY(1.015); }
+      100% { transform: translateY(0) scaleY(1); opacity: 1; }
+    }
+
+    #sc2 .fig-main           { transform-origin: 100px 322px; }
+    #sc2 .fig-main.rising    { animation: rise-up 3.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+
+    /* ══════════════════════════════════════════════════════════════════════
+       ANIMATIONS SCÈNE 3 — LE RITUEL
+       Corps en léger balancement, bras droit qui s'élève en arc gracieux
+    ══════════════════════════════════════════════════════════════════════ */
+    @keyframes body-sway-soft {
+      0%,100% { transform: rotate(-1.2deg); }
+      50%     { transform: rotate(0.8deg); }
+    }
+    @keyframes arm-rise {
+      0%   { transform: rotate(0deg); }
+      35%  { transform: rotate(-78deg) translateY(-4px); }
+      60%  { transform: rotate(-83deg) translateY(-6px); }
+      80%  { transform: rotate(-78deg) translateY(-4px); }
+      100% { transform: rotate(0deg); }
+    }
+    @keyframes sparkle {
+      0%,100% { opacity: 0; transform: scale(0.5) translateY(0); }
+      30%     { opacity: 1; }
+      70%     { opacity: 0.6; transform: scale(1.2) translateY(-12px); }
+    }
+
+    #sc3 .fig-main     { transform-origin: 100px 322px; animation: body-sway-soft 5s ease-in-out infinite; }
+    #sc3 .arm-right-g  { transform-origin: 122px 112px; animation: arm-rise 5.5s ease-in-out infinite; }
+    #sc3 .sparkle-1    { animation: sparkle 5.5s ease-in-out infinite; }
+    #sc3 .sparkle-2    { animation: sparkle 5.5s ease-in-out infinite 0.5s; }
+    #sc3 .sparkle-3    { animation: sparkle 5.5s ease-in-out infinite 1s; }
+  </style>
+</head>
+<body>
+
+  <div class="glow g1"></div>
+  <div class="glow g2"></div>
+
+  <div class="frame" id="frame">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SCÈNE 1 : LA FLAMME
+    ══════════════════════════════════════════════════════════════════════ -->
+    <div class="scene active" id="sc1">
+      <div class="figure-area">
+        <svg viewBox="0 0 200 340" class="figure-svg" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+          <defs>
+            <radialGradient id="bg-glow-1" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"   stop-color="rgba(251,113,133,0.28)"/>
+              <stop offset="100%" stop-color="rgba(251,113,133,0)"/>
+            </radialGradient>
+            <linearGradient id="body-grad-1" x1="0.3" y1="0" x2="0.7" y2="1">
+              <stop offset="0%"   stop-color="#fda4af"/>
+              <stop offset="100%" stop-color="#e11d48"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Halo rayonnant derrière la figure -->
+          <ellipse class="fig-glow" cx="100" cy="190" rx="88" ry="128" fill="url(#bg-glow-1)"/>
+
+          <!-- Groupe principal (sway depuis la base) -->
+          <g class="fig-main">
+
+            <!-- Cheveux fluides (swayent plus vite) -->
+            <g class="fig-hair">
+              <!-- masse de cheveux -->
+              <path d="M72,56 Q46,22 54,2 Q68,-16 100,-14 Q132,-16 146,2 Q154,22 128,56
+                       Q115,70 100,73 Q85,70 72,56Z"
+                    fill="rgba(190,40,95,0.88)"/>
+              <!-- mèche gauche qui flotte -->
+              <path d="M74,60 Q48,90 42,132 Q39,158 46,180"
+                    stroke="rgba(190,40,95,0.55)" stroke-width="7" fill="none" stroke-linecap="round"/>
+              <!-- mèche droite -->
+              <path d="M126,60 Q152,90 158,132 Q161,158 154,180"
+                    stroke="rgba(190,40,95,0.45)" stroke-width="6" fill="none" stroke-linecap="round"/>
+            </g>
+
+            <!-- Tête -->
+            <ellipse cx="100" cy="62" rx="27" ry="31" fill="url(#body-grad-1)"/>
+
+            <!-- Cou -->
+            <path d="M89,92 L90,110 Q100,117 110,110 L111,92 Q100,99 89,92Z"
+                  fill="#fb7185"/>
+
+            <!-- Corps / robe (A-line) -->
+            <path d="M76,107
+                     Q58,118 48,148
+                     Q38,178 40,218
+                     Q42,260 56,296
+                     Q70,322 100,328
+                     Q130,322 144,296
+                     Q158,260 160,218
+                     Q162,178 152,148
+                     Q142,118 124,107
+                     Q112,104 100,105
+                     Q88,104 76,107Z"
+                  fill="url(#body-grad-1)"/>
+
+            <!-- Bras gauche (légèrement ouvert) -->
+            <path d="M76,117 Q52,138 36,172 Q30,192 34,210"
+                  stroke="#fda4af" stroke-width="11" fill="none" stroke-linecap="round"/>
+
+            <!-- Bras droit (légèrement ouvert) -->
+            <path d="M124,117 Q148,138 164,172 Q170,192 166,210"
+                  stroke="#fda4af" stroke-width="11" fill="none" stroke-linecap="round"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="text-area">
+        <span class="scene-label">01 — La Flamme</span>
+        <div class="ornament"></div>
+        <p class="scene-quote">
+          La motivation est<br>une <em>flamme.</em><br>
+          Elle brille.<br>Elle vacille.<br>
+          Elle s'éteint parfois<br>au mauvais moment.
+        </p>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SCÈNE 2 : LA FONDATION
+    ══════════════════════════════════════════════════════════════════════ -->
+    <div class="scene" id="sc2">
+      <div class="figure-area">
+        <svg viewBox="0 0 200 340" class="figure-svg" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+          <defs>
+            <radialGradient id="bg-glow-2" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"   stop-color="rgba(167,139,250,0.28)"/>
+              <stop offset="100%" stop-color="rgba(167,139,250,0)"/>
+            </radialGradient>
+            <linearGradient id="body-grad-2" x1="0.3" y1="0" x2="0.7" y2="1">
+              <stop offset="0%"   stop-color="#c4b5fd"/>
+              <stop offset="100%" stop-color="#5b21b6"/>
+            </linearGradient>
+          </defs>
+
+          <ellipse cx="100" cy="190" rx="80" ry="118" fill="url(#bg-glow-2)"/>
+
+          <!-- Groupe qui s'élève -->
+          <g class="fig-main" id="fig-rise">
+
+            <!-- Chignon élégant -->
+            <ellipse cx="100" cy="36" rx="23" ry="17" fill="rgba(91,33,182,0.9)"/>
+            <path d="M80,42 Q77,54 82,64" stroke="rgba(91,33,182,0.7)" stroke-width="6" fill="none" stroke-linecap="round"/>
+            <path d="M120,42 Q123,54 118,64" stroke="rgba(91,33,182,0.7)" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+            <!-- Tête -->
+            <ellipse cx="100" cy="66" rx="27" ry="30" fill="url(#body-grad-2)"/>
+
+            <!-- Cou -->
+            <path d="M89,95 L90,113 Q100,120 110,113 L111,95 Q100,102 89,95Z"
+                  fill="#a78bfa"/>
+
+            <!-- Corps (debout, stable, légèrement plus étroit) -->
+            <path d="M82,111
+                     Q66,120 58,148
+                     Q50,178 52,218
+                     Q54,258 66,295
+                     Q78,322 100,328
+                     Q122,322 134,295
+                     Q146,258 148,218
+                     Q150,178 142,148
+                     Q134,120 118,111
+                     Q109,107 100,108
+                     Q91,107 82,111Z"
+                  fill="url(#body-grad-2)"/>
+
+            <!-- Bras gauche (le long du corps, ancré) -->
+            <path d="M82,120 Q68,148 64,180 Q62,200 64,218"
+                  stroke="#c4b5fd" stroke-width="11" fill="none" stroke-linecap="round"/>
+
+            <!-- Bras droit (le long du corps, ancré) -->
+            <path d="M118,120 Q132,148 136,180 Q138,200 136,218"
+                  stroke="#c4b5fd" stroke-width="11" fill="none" stroke-linecap="round"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="text-area">
+        <span class="scene-label">02 — La Fondation</span>
+        <div class="ornament"></div>
+        <p class="scene-quote">
+          <em>S'affiner,<br>s'affirmer,</em><br>
+          c'est créer<br>des rituels<br>qui te rappellent<br>
+          <em>qui tu deviens.</em>
+        </p>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SCÈNE 3 : LE RITUEL
+    ══════════════════════════════════════════════════════════════════════ -->
+    <div class="scene" id="sc3">
+      <div class="figure-area">
+        <svg viewBox="0 0 200 340" class="figure-svg" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+          <defs>
+            <radialGradient id="bg-glow-3" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"   stop-color="rgba(216,180,254,0.28)"/>
+              <stop offset="100%" stop-color="rgba(216,180,254,0)"/>
+            </radialGradient>
+            <linearGradient id="body-grad-3" x1="0.3" y1="0" x2="0.7" y2="1">
+              <stop offset="0%"   stop-color="#e9d5ff"/>
+              <stop offset="100%" stop-color="#9333ea"/>
+            </linearGradient>
+          </defs>
+
+          <ellipse cx="100" cy="190" rx="85" ry="122" fill="url(#bg-glow-3)"/>
+
+          <!-- Corps (balancement doux) -->
+          <g class="fig-main">
+
+            <!-- Cheveux (natte libre qui descend) -->
+            <path d="M100,32 Q118,40 120,57 Q121,76 100,79 Q79,76 80,57 Q82,40 100,32Z"
+                  fill="rgba(126,34,206,0.85)"/>
+            <path d="M120,60 Q128,88 125,128 Q123,155 120,175"
+                  stroke="rgba(126,34,206,0.6)" stroke-width="7" fill="none" stroke-linecap="round"/>
+
+            <!-- Tête -->
+            <ellipse cx="100" cy="63" rx="27" ry="30" fill="url(#body-grad-3)"/>
+
+            <!-- Cou -->
+            <path d="M89,92 L90,110 Q100,117 110,110 L111,92 Q100,99 89,92Z"
+                  fill="#c084fc"/>
+
+            <!-- Corps / robe (fluide, légèrement asymétrique) -->
+            <path d="M78,108
+                     Q60,119 50,148
+                     Q40,178 42,218
+                     Q44,258 57,295
+                     Q70,322 100,328
+                     Q130,322 143,295
+                     Q156,258 158,218
+                     Q160,178 150,148
+                     Q140,119 122,108
+                     Q111,104 100,105
+                     Q89,104 78,108Z"
+                  fill="url(#body-grad-3)"/>
+
+            <!-- Bras gauche — main près du cœur -->
+            <path d="M78,118 Q65,140 59,165 Q55,182 58,198"
+                  stroke="#e9d5ff" stroke-width="11" fill="none" stroke-linecap="round"/>
+
+            <!-- Bras droit — s'élève en arc (groupe animé séparément) -->
+            <g class="arm-right-g">
+              <path d="M122,112 Q142,92 158,64 Q166,46 162,28"
+                    stroke="#e9d5ff" stroke-width="11" fill="none" stroke-linecap="round"/>
+            </g>
+
+            <!-- Étincelles au bout du bras levé -->
+            <circle class="sparkle-1" cx="162" cy="28" r="4" fill="#FB7185" opacity="0"/>
+            <circle class="sparkle-2" cx="172" cy="18" r="3" fill="#fda4af" opacity="0"/>
+            <circle class="sparkle-3" cx="155" cy="14" r="2.5" fill="#e9d5ff" opacity="0"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="text-area">
+        <span class="scene-label">03 — Le Rituel</span>
+        <div class="ornament"></div>
+        <p class="scene-quote">
+          Quel rituel<br>veux-tu construire<br>cette semaine ?<br>
+          ✨ Dis-le ici.<br>Je <em>t'accompagne.</em>
+        </p>
+      </div>
+    </div>
+
+
+    <!-- Dots de progression -->
+    <div class="dots">
+      <div class="dot active" id="d0"></div>
+      <div class="dot" id="d1"></div>
+      <div class="dot" id="d2"></div>
+    </div>
+
+    <!-- Hint clavier -->
+    <div class="hint" id="hint">← cliquez · touche → pour naviguer →</div>
+
+  </div><!-- /frame -->
+
+  <script>
+    const SCENES = ['sc1', 'sc2', 'sc3'];
+    const DOTS   = ['d0',  'd1',  'd2'];
+    let current  = 0;
+
+    function show(idx) {
+      SCENES.forEach((id, i) => {
+        const el = document.getElementById(id);
+        const dot = document.getElementById(DOTS[i]);
+        const isActive = (i === idx);
+        el.classList.toggle('active', isActive);
+        dot.classList.toggle('active', isActive);
+      });
+
+      // Rejouer l'animation de la scène 2 à chaque visite
+      if (idx === 1) {
+        const g = document.getElementById('fig-rise');
+        g.classList.remove('rising');
+        void g.offsetWidth; // force reflow
+        g.classList.add('rising');
+      }
+
+      current = idx;
+    }
+
+    function nav(dir) {
+      const next = current + dir;
+      if (next >= 0 && next < SCENES.length) show(next);
+    }
+
+    // Clic sur le cadre
+    document.getElementById('frame').addEventListener('click', e => {
+      nav(e.clientX < window.innerWidth / 2 ? -1 : 1);
+    });
+
+    // Clavier
+    document.addEventListener('keydown', e => {
+      if (['ArrowRight', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); nav(1); }
+      else if (e.key === 'ArrowLeft') nav(-1);
+    });
+
+    // Disparition du hint après 5s
+    setTimeout(() => document.getElementById('hint').classList.add('gone'), 5000);
+  </script>
+</body>
+</html>

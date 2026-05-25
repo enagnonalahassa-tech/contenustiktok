@@ -1,0 +1,405 @@
+/* Style pour la Présentation 9:16 - 3 Variantes Élégance Féminine */
+
+:root {
+  --transition-speed: 0.8s;
+}
+
+/* 1. THÈMES DE VARIANTES (CSS Variables Overrides) */
+
+/* variante 1 : Douce Élégance (Soft Power / Rose Poudré & Champagne) */
+.theme-soft-power {
+  --color-page-bg: linear-gradient(135deg, #FAF5F5 0%, #FFFDF9 50%, #F5EBEB 100%);
+  --color-card-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(253, 244, 245, 0.85) 100%);
+  --color-border: rgba(219, 39, 119, 0.15);
+  --color-border-glow: rgba(219, 39, 119, 0.05);
+  --color-text-main: #4C0519; /* Bordeaux profond */
+  --color-text-muted: #881337;
+  --color-highlight: #DB2777; /* Rose poudré vif */
+  --color-highlight-glow: rgba(219, 39, 119, 0.2);
+  --font-title: 'Cormorant Garamond', serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-style-title: italic;
+  --text-transform: none;
+  --glow-filter: drop-shadow(0 0 10px rgba(219, 39, 119, 0.15));
+  --footer-bg: rgba(250, 245, 245, 0.95);
+}
+
+/* variante 2 : Force Émeraude (Emerald Luxury / Émeraude Profond & Or Rose) */
+.theme-emerald-luxury {
+  --color-page-bg: linear-gradient(135deg, #021e17 0%, #063c2f 100%);
+  --color-card-bg: linear-gradient(180deg, #022C22 0%, #043a2e 100%);
+  --color-border: rgba(254, 205, 211, 0.2);
+  --color-border-glow: rgba(254, 205, 211, 0.05);
+  --color-text-main: #F8FAFC; /* Blanc cassé */
+  --color-text-muted: #94A3B8;
+  --color-highlight: #FDA4AF; /* Rose doré doux */
+  --color-highlight-glow: rgba(254, 205, 211, 0.4);
+  --font-title: 'Playfair Display', serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-style-title: normal;
+  --text-transform: uppercase;
+  --glow-filter: drop-shadow(0 0 15px rgba(254, 205, 211, 0.3));
+  --footer-bg: rgba(2, 44, 34, 0.95);
+}
+
+/* variante 3 : Nuit Satinée (Satin Night / Violet Satin & Prune Mystique) */
+.theme-satin-night {
+  --color-page-bg: linear-gradient(135deg, #0b071a 0%, #200a29 100%);
+  --color-card-bg: linear-gradient(180deg, #120F24 0%, #1e112d 100%);
+  --color-border: rgba(244, 63, 94, 0.2);
+  --color-border-glow: rgba(244, 63, 94, 0.05);
+  --color-text-main: #F1F5F9; /* Gris satin */
+  --color-text-muted: #94A3B8;
+  --color-highlight: #FB7185; /* Orchidée vibrante */
+  --color-highlight-glow: rgba(251, 113, 133, 0.45);
+  --font-title: 'Playfair Display', serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-style-title: italic;
+  --text-transform: none;
+  --glow-filter: drop-shadow(0 0 20px rgba(251, 113, 133, 0.35));
+  --footer-bg: rgba(18, 15, 36, 0.95);
+}
+
+/* 2. BASE DE LA PAGE */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--color-page-bg);
+  color: var(--color-text-main);
+  font-family: var(--font-body);
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: background var(--transition-speed) ease-in-out;
+}
+
+/* 3. BARRE DE SÉLECTION DE VARIANTES (Top Navigation) */
+.variant-selector-bar {
+  position: absolute;
+  top: 1.5rem;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.theme-soft-power .variant-selector-bar {
+  background: rgba(255, 255, 255, 0.5);
+  border-color: rgba(219, 39, 119, 0.1);
+  box-shadow: 0 4px 20px rgba(219, 39, 119, 0.05);
+}
+
+.selector-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.variant-pills {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.variant-pill {
+  background: none;
+  border: 1px solid transparent;
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.4rem 0.8rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.variant-pill:hover {
+  color: var(--color-text-main);
+  background-color: rgba(255,255,255,0.05);
+}
+
+.theme-soft-power .variant-pill:hover {
+  background-color: rgba(219, 39, 119, 0.05);
+}
+
+.variant-pill.active {
+  color: var(--color-text-main);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--color-border);
+  box-shadow: 0 2px 10px var(--color-border-glow);
+}
+
+.theme-soft-power .variant-pill.active {
+  background-color: #fff;
+  border-color: rgba(219, 39, 119, 0.2);
+}
+
+/* Dots color selector indicators */
+.pill-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.color-pink { background-color: #DB2777; }
+.color-emerald { background-color: #34D399; }
+.color-plum { background-color: #F43F5E; }
+
+
+/* 4. CONTENEUR GÉANT DU VIEWPORT 9:16 (Centered) */
+.viewport-9-16-container {
+  width: 95%;
+  height: 75vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.presentation-container {
+  aspect-ratio: 9 / 16;
+  height: 100%;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 32px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2), 0 0 40px var(--color-border-glow);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-speed) ease-in-out;
+}
+
+/* 5. SLIDES */
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, 50px, 0);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+  padding: 3rem;
+  text-align: center;
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0);
+}
+
+.slide.exit {
+  opacity: 0;
+  transform: translate3d(0, -50px, 0);
+}
+
+/* Slide back animations */
+.slide.back-enter {
+  opacity: 0;
+  transform: translate3d(0, -50px, 0);
+}
+
+.slide.back-exit {
+  opacity: 0;
+  transform: translate3d(0, 50px, 0);
+}
+
+.slide-content {
+  width: 100%;
+}
+
+/* 6. TYPOGRAPHIE DIAPO GÉANTE */
+.main-text {
+  font-family: var(--font-title);
+  font-style: var(--font-style-title);
+  font-size: clamp(1.8rem, 3.8vh, 3.2rem);
+  font-weight: 800;
+  line-height: 1.25;
+  text-transform: var(--text-transform);
+  letter-spacing: -0.5px;
+  word-wrap: break-word;
+  white-space: pre-line;
+  color: var(--color-text-main);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  animation: slide-pop 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: color 0.5s;
+}
+
+@keyframes slide-pop {
+  0% { transform: scale(0.94); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Highlights Green/Rose Gold/Orchidée */
+.main-text span.highlight {
+  color: var(--color-highlight);
+  font-weight: 900;
+  display: inline-block;
+  position: relative;
+  filter: var(--glow-filter);
+  transition: color 0.5s, filter 0.5s;
+}
+
+/* 7. FOOTER DE PRÉPARATION & NAVIGATION */
+.presentation-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--footer-bg);
+  z-index: 10;
+  border-top: 1px solid rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  transition: background var(--transition-speed) ease-in-out;
+}
+
+.theme-soft-power .presentation-footer {
+  border-top-color: rgba(219, 39, 119, 0.08);
+}
+
+.nav-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.scene-badge {
+  background-color: var(--color-border);
+  color: var(--color-text-main);
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  transition: background-color 0.5s, color 0.5s;
+}
+
+.scene-duration {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+}
+
+.nav-controls {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.nav-btn {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-main);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+.theme-soft-power .nav-btn {
+  background-color: rgba(219, 39, 119, 0.03);
+}
+
+.nav-btn:hover {
+  background-color: var(--color-highlight);
+  color: var(--color-page-bg);
+  border-color: var(--color-highlight);
+  transform: scale(1.05);
+}
+
+.nav-btn:active {
+  transform: scale(0.95);
+}
+
+/* 8. INSTRUCTIONS / CLAVIER HINTS */
+.nav-hint {
+  position: absolute;
+  top: 6rem;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.5rem 1rem;
+  border-radius: 30px;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  z-index: 10;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  transition: opacity 1s ease-out;
+  pointer-events: none;
+}
+
+.theme-soft-power .nav-hint {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(219, 39, 119, 0.1);
+}
+
+.nav-hint.fade-out {
+  opacity: 0;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%) translateY(50px);
+  background-color: var(--color-card-bg);
+  color: var(--color-text-main);
+  border: 1px solid var(--color-border);
+  padding: 0.5rem 1.2rem;
+  border-radius: 30px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  opacity: 0;
+  z-index: 1000;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.hidden {
+  display: none !important;
+}

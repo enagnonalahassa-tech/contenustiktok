@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuit Satinée — Motivation ≠ Système</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,700&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─── RESET ──────────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ─── PAGE ───────────────────────────────────────────────────────────── */
+    body {
+      background: radial-gradient(ellipse at 60% 30%, #2d1040 0%, #130920 50%, #060410 100%);
+      min-height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Outfit', sans-serif;
+      overflow: hidden;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* Grain satiné en superposition */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── GLOW BACKGROUND ─────────────────────────────────────────────────── */
+    .glow {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.45;
+    }
+    .glow-1 {
+      width: 380px; height: 380px;
+      background: radial-gradient(circle, #7c3aed 0%, transparent 70%);
+      top: -80px; left: -80px;
+      animation: drift-1 12s ease-in-out infinite alternate;
+    }
+    .glow-2 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, #be185d 0%, transparent 70%);
+      bottom: -60px; right: -60px;
+      animation: drift-2 15s ease-in-out infinite alternate;
+    }
+    @keyframes drift-1 { to { transform: translate(40px, 60px); } }
+    @keyframes drift-2 { to { transform: translate(-30px, -40px); } }
+
+    /* ─── FRAME 9:16 ─────────────────────────────────────────────────────── */
+    .frame {
+      position: relative;
+      z-index: 1;
+      aspect-ratio: 9 / 16;
+      height: 90vh;
+      max-height: 720px;
+      background: linear-gradient(160deg, #1e0f30 0%, #2a0d3a 50%, #120920 100%);
+      border: 1px solid rgba(251, 113, 133, 0.12);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.04),
+        0 40px 80px rgba(0,0,0,0.6),
+        0 0 60px rgba(124, 58, 237, 0.12);
+    }
+
+    /* Inner glow sur les bords du frame */
+    .frame::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 28px;
+      background:
+        linear-gradient(180deg, rgba(251, 113, 133, 0.04) 0%, transparent 40%,
+                                transparent 60%, rgba(124, 58, 237, 0.06) 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── SLIDE DECK ──────────────────────────────────────────────────────── */
+    .deck {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(32px);
+      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .slide.exit-up   { opacity: 0; transform: translateY(-32px); }
+    .slide.exit-down { opacity: 0; transform: translateY(32px); }
+
+    /* ─── TYPOGRAPHIE ─────────────────────────────────────────────────────── */
+    .slide-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(0.55rem, 1.4vh, 0.7rem);
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(251, 113, 133, 0.5);
+      margin-bottom: 1.8rem;
+    }
+
+    .main-text {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.5rem, 4.5vh, 2.4rem);
+      font-weight: 700;
+      line-height: 1.35;
+      color: #EDE9FE;
+      text-shadow: 0 4px 24px rgba(0,0,0,0.4);
+      white-space: pre-line;
+      animation: text-in 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes text-in {
+      from { opacity: 0; transform: scale(0.96); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .main-text .hl {
+      color: #FB7185;
+      font-weight: 800;
+      filter: drop-shadow(0 0 12px rgba(251, 113, 133, 0.45));
+    }
+
+    /* Séparateur ornemental */
+    .ornament {
+      display: block;
+      margin: 1.4rem auto 0;
+      width: 36px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(251,113,133,0.5), transparent);
+    }
+
+    /* ─── PROGRESS DOTS ───────────────────────────────────────────────────── */
+    .dots {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 7px;
+      z-index: 10;
+    }
+
+    .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background-color: rgba(255,255,255,0.15);
+      transition: all 0.4s ease;
+    }
+
+    .dot.active {
+      width: 18px;
+      border-radius: 3px;
+      background-color: #FB7185;
+      box-shadow: 0 0 8px rgba(251, 113, 133, 0.6);
+    }
+
+    /* ─── HINT CLAVIER ────────────────────────────────────────────────────── */
+    .hint {
+      position: absolute;
+      bottom: 4.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      z-index: 10;
+      transition: opacity 1s ease;
+    }
+    .hint.hidden { opacity: 0; pointer-events: none; }
+  </style>
+</head>
+<body>
+
+  <!-- Glows de fond -->
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+
+  <!-- Frame 9:16 -->
+  <div class="frame" id="frame">
+    <div class="deck" id="deck">
+      <!-- Slides générées par le script -->
+    </div>
+
+    <!-- Indicateurs de progression -->
+    <div class="dots" id="dots"></div>
+
+    <!-- Hint clavier -->
+    <div class="hint" id="hint">← → ou cliquez pour naviguer</div>
+  </div>
+
+  <script>
+    // ─── CONTENU "NUIT SATINÉE" ───────────────────────────────────────────────
+    const SLIDES = [
+      {
+        name: "Accroche",
+        html: `Et si ce n'était pas\nta <span class="hl">motivation</span>\nqui te manquait ?`
+      },
+      {
+        name: "Pivot",
+        html: `Mais un <span class="hl">système</span>\nqui te soutient\nquand tu fléchis.`
+      },
+      {
+        name: "La vérité",
+        html: `La motivation est\nune flamme.\nElle brille.\nElle vacille.\nElle s'éteint parfois\nau mauvais moment.`
+      },
+      {
+        name: "La clé",
+        html: `Un système\nest une <span class="hl">fondation.</span>\nIl ne te demande pas\nde te sentir inspirée.\nJuste de <span class="hl">te présenter.</span>`
+      },
+      {
+        name: "L'exemple",
+        html: `Vouloir prendre\nsoin de toi chaque matin ?\nLa motivation dit :\n"Trouve la force."\nLe système dit :\n"<span class="hl">Prépare l'espace</span>\nla veille."`
+      },
+      {
+        name: "L'affirmation",
+        html: `<span class="hl">S'affiner,\ns'affirmer,</span>\nc'est créer\ndes rituels\nqui te rappellent\nqui tu deviens.`
+      },
+      {
+        name: "Invitation",
+        html: `Quel rituel veux-tu\nconstruire cette semaine ?\n✨ Dis-le ici.\nJe <span class="hl">t'accompagne.</span>`
+      },
+    ];
+
+    // ─── ÉTAT ─────────────────────────────────────────────────────────────────
+    let current = 0;
+
+    // ─── RENDU INITIAL ────────────────────────────────────────────────────────
+    function buildDeck() {
+      const deck = document.getElementById('deck');
+      const dotsEl = document.getElementById('dots');
+
+      SLIDES.forEach((s, i) => {
+        // Slide
+        const div = document.createElement('div');
+        div.className = `slide ${i === 0 ? 'active' : ''}`;
+        div.id = `s-${i}`;
+        div.innerHTML = `
+          <span class="slide-name">${s.name}</span>
+          <h1 class="main-text">${s.html}</h1>
+          <span class="ornament"></span>
+        `;
+        deck.appendChild(div);
+
+        // Dot
+        const dot = document.createElement('div');
+        dot.className = `dot ${i === 0 ? 'active' : ''}`;
+        dot.id = `d-${i}`;
+        dotsEl.appendChild(dot);
+      });
+    }
+
+    // ─── NAVIGATION ───────────────────────────────────────────────────────────
+    function go(dir) {
+      const next = current + dir;
+      if (next < 0 || next >= SLIDES.length) return;
+
+      const oldSlide = document.getElementById(`s-${current}`);
+      const newSlide = document.getElementById(`s-${next}`);
+      const oldDot   = document.getElementById(`d-${current}`);
+      const newDot   = document.getElementById(`d-${next}`);
+
+      // Sortie de l'ancienne slide
+      oldSlide.className = `slide ${dir > 0 ? 'exit-up' : 'exit-down'}`;
+      oldDot.classList.remove('active');
+
+      // Entrée de la nouvelle slide
+      // Positionner sans transition pour l'entrée basse/haute
+      newSlide.style.transition = 'none';
+      newSlide.style.opacity = '0';
+      newSlide.style.transform = dir > 0 ? 'translateY(32px)' : 'translateY(-32px)';
+      newSlide.className = 'slide';
+      newSlide.offsetHeight; // reflow
+
+      // Activer la transition
+      newSlide.style.transition = '';
+      newSlide.style.opacity = '';
+      newSlide.style.transform = '';
+      newSlide.classList.add('active');
+      newDot.classList.add('active');
+
+      current = next;
+
+      // Relancer l'animation du texte en réinitialisant l'animation CSS
+      const text = newSlide.querySelector('.main-text');
+      text.style.animation = 'none';
+      text.offsetHeight;
+      text.style.animation = '';
+    }
+
+    // ─── ÉVÉNEMENTS ───────────────────────────────────────────────────────────
+    document.addEventListener('keydown', e => {
+      if (['ArrowRight', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); go(1); }
+      else if (e.key === 'ArrowLeft') go(-1);
+    });
+
+    document.getElementById('frame').addEventListener('click', e => {
+      go(e.clientX < window.innerWidth / 2 ? -1 : 1);
+    });
+
+    // ─── HINT DISPARAÎT ───────────────────────────────────────────────────────
+    setTimeout(() => {
+      document.getElementById('hint').classList.add('hidden');
+    }, 4000);
+
+    // ─── START ────────────────────────────────────────────────────────────────
+    buildDeck();
+  </script>
+</body>
+</html>

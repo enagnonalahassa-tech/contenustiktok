@@ -1,0 +1,9 @@
+# Fichiers média lourds
+*.mov
+*.mp4
+*.m4a
+*.mp3
+*.wav
+
+# macOS
+.DS_Store

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Motivation vs Système — TikTok 40s</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; }
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      background: #08040f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      color: #f7f3ff;
+      user-select: none;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(171, 85, 255, 0.18), transparent 24%),
+                  radial-gradient(circle at bottom right, rgba(244, 114, 182, 0.12), transparent 22%);
+      pointer-events: none;
+    }
+    .frame {
+      position: relative;
+      width: min(420px, calc(100vw - 24px));
+      aspect-ratio: 9 / 16;
+      border-radius: 32px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #170525 0%, #0b0614 100%);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 24px 100px rgba(0,0,0,0.55);
+    }
+    .backdrop {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(166,85,255,0.08), transparent 22%),
+                  radial-gradient(circle at 25% 20%, rgba(244,114,182,0.16), transparent 16%),
+                  radial-gradient(circle at 70% 15%, rgba(59,130,246,0.12), transparent 14%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .mask {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 10%, rgba(255,255,255,0.06), transparent 24%),
+                  radial-gradient(circle at 50% 77%, rgba(255,255,255,0.02), transparent 18%);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .slides {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 2rem 1.5rem 2.2rem;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 1rem;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .scene-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      font-weight: 700;
+    }
+    .title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.9rem, 4.5vw, 3.2rem);
+      line-height: 1.05;
+      font-weight: 700;
+      color: #f8f3ff;
+      letter-spacing: -0.04em;
+      text-shadow: 0 18px 40px rgba(15, 8, 25, 0.35);
+    }
+    .title .accent {
+      color: #f9a8d4;
+      text-shadow: 0 0 18px rgba(249,168,212,0.42);
+    }
+    .body-copy {
+      font-size: clamp(0.95rem, 2.7vw, 1.25rem);
+      line-height: 1.55;
+      color: rgba(249, 236, 255, 0.88);
+      max-width: 86%;
+      margin: 0 auto;
+      letter-spacing: 0.01em;
+    }
+    .body-copy strong {
+      color: #f472b6;
+      font-weight: 700;
+    }
+    .figure {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateY(0);
+      transition: transform 1s ease;
+    }
+    .slide.active .figure { transform: translateY(-4px); }
+    .silhouette {
+      width: min(68vw, 210px);
+      max-width: 240px;
+      aspect-ratio: 0.75;
+      position: relative;
+    }
+    .silhouette path {
+      fill: none;
+      stroke: rgba(249, 168, 212, 0.95);
+      stroke-width: 3.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 0 24px rgba(244,114,182,0.3));
+    }
+    .silhouette .skin {
+      fill: rgba(255,255,255,0.08);
+    }
+    .silhouette .line {
+      stroke-dasharray: 450;
+      stroke-dashoffset: 450;
+      animation: draw 3.2s ease forwards;
+    }
+    .slide[data-index="0"] .silhouette .line { animation-delay: 0.2s; }
+    .slide[data-index="1"] .silhouette .line { animation-delay: 0.4s; }
+    .slide[data-index="2"] .silhouette .line { animation-delay: 0.6s; }
+    .slide[data-index="3"] .silhouette .line { animation-delay: 0.8s; }
+    .slide[data-index="4"] .silhouette .line { animation-delay: 1s; }
+    .slide[data-index="5"] .silhouette .line { animation-delay: 1.2s; }
+    .slide[data-index="6"] .silhouette .line { animation-delay: 1.4s; }
+    .slide[data-index="7"] .silhouette .line { animation-delay: 1.6s; }
+    @keyframes draw {
+      to { stroke-dashoffset: 0; }
+    }
+    .glow-detail {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 18%, rgba(248,243,255,0.12), transparent 20%);
+      opacity: 0.96;
+      filter: blur(8px);
+    }
+    .timeline {
+      position: absolute;
+      left: 1.5rem;
+      top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      z-index: 3;
+    }
+    .stage {
+      width: 46px;
+      height: 2px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      overflow: hidden;
+    }
+    .stage.active::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, #f472b6, #8b5cf6);
+      transform-origin: left center;
+      transform: scaleX(1);
+    }
+    .stage::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      transform-origin: left center;
+      transform: scaleX(0);
+      transition: transform 0.8s ease;
+    }
+    .stage.active::after { transform: scaleX(1); }
+    .footer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .footer span {
+      font-size: 0.74rem;
+      color: rgba(255,255,255,0.32);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .footer .prompt {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.66);
+    }
+    .footer .prompt em {
+      color: #f9a8d4;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="frame" id="frame">
+    <div class="backdrop"></div>
+    <div class="mask"></div>
+    <div class="slides" id="slides"></div>
+  </div>
+  <script>
+    const SLIDES = [
+      {
+        label: 'Intro',
+        title: 'La motivation est belle.',
+        copy: 'Elle réveille, elle donne envie. Mais elle ne suffit pas à tenir quand les ressources et le soutien manquent.',
+        figure: 'body-1'
+      },
+      {
+        label: 'Vérité',
+        title: 'Le vrai obstacle',
+        copy: 'Ce n’est pas que tu manques de volonté. C’est que tu n’as pas encore construit le système qui te soutient quand tu fléchis.',
+        figure: 'body-2'
+      },
+      {
+        label: 'Image',
+        title: 'La flamme vacille.',
+        copy: 'Dans les mois difficiles, elle peut perdre son or. Elle brûle fort, puis elle diminue. C’est normal.',
+        figure: 'body-3'
+      },
+      {
+        label: 'Pivot',
+        title: 'Le système reste.',
+        copy: 'Le système, lui, repose sur des gestes simples. Des rituels, de petits réflexes, une présence constante qui agit même sans inspiration.',
+        figure: 'body-1'
+      },
+      {
+        label: 'Exemple',
+        title: 'Se préparer, chaque matin.',
+        copy: 'La motivation dit « trouve la force ». Le système dit « prépare ta tenue, ton esprit, ton espace la veille ». Et le matin, tu es déjà prête.',
+        figure: 'body-2'
+      },
+      {
+        label: 'Cible',
+        title: 'Pour celles qui montent d’un niveau.',
+        copy: 'Ce message s’adresse aux femmes ambitieuses : leaders, managers, entrepreneuses, qui veulent plus de clarté, plus d’impact, sans perdre leur énergie.',
+        figure: 'body-3'
+      },
+      {
+        label: 'Affirmation',
+        title: 'S’affiner, s’affirmer.',
+        copy: 'Ce n’est pas juste être motivée. C’est bâtir un système qui te permet d’avancer, même quand ta flamme vacille.',
+        figure: 'body-1'
+      },
+      {
+        label: 'Invitation',
+        title: 'Que veux-tu construire ?',
+        copy: 'Cette semaine, choisis un rituel qui te rappelle qui tu deviens. Ton succès n’est pas seulement dans l’énergie — il est dans le système.',
+        figure: 'body-2'
+      }
+    ];
+
+    const slidesEl = document.getElementById('slides');
+
+    function createFigure(type) {
+      const svg = {
+        'body-1': `
+          <svg viewBox="0 0 240 320" class="silhouette" aria-hidden="true">
+            <defs>
+              <linearGradient id="glow1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="rgba(255,255,255,0.22)" />
+                <stop offset="100%" stop-color="rgba(244,114,182,0.18)" />
+              </linearGradient>
+            </defs>
+            <path class="skin" d="M80 58c26-28 72-30 90 2s6 74-18 110c-25 38-70 94-82 132-14 44 10 64 34 44s36-70 52-120 10-70-14-102-42-30-52-40z" opacity="0.14" />
+            <path class="line" d="M84 56c22-22 56-26 80-4s24 54 14 86c-10 30-42 72-52 92s-16 54-2 62 38-12 58-42c20-30 28-64 18-98s-20-70-34-84-44-20-68-8c-24 12-34 38-34 72 0 34 14 72 42 106 28 34 58 56 88 32"/>
+            <path class="line" d="M146 80c-12 6-32 20-48 40s-18 42-12 58 20 32 36 30 28-16 28-32-8-40-16-56"/>
+          </svg>
+        `,
+        'body-2': `
+          <svg viewBox="0 0 240 320" class="silhouette" aria-hidden="true">
+            <path class="skin" d="M110 42c34-6 58 10 70 28s18 46 10 76c-8 28-28 56-44 84-18 32-44 58-58 76-16 20-30 30-44 20s-6-34 2-58 24-62 50-98c26-36 46-66 52-88s-4-48-18-62-34-20-48-18-24 10-24 18 8 22 18 26 26 4 34-2z" opacity="0.12" />
+            <path class="line" d="M116 46c22-4 46 8 60 26s22 44 18 70-20 54-36 74-38 52-50 70-18 36-8 42 28-4 46-30 34-62 44-88 10-58 0-82-20-40-34-50c-14-10-34-14-52-10s-32 18-28 30 18 18 30 16 24-16 26-26"/>
+            <path class="line" d="M122 94c-10 22-22 50-20 74s18 28 32 18 16-36 20-54 4-44-10-58c-14-14-28-6-34 20"/>
+          </svg>
+        `,
+        'body-3': `
+          <svg viewBox="0 0 240 320" class="silhouette" aria-hidden="true">
+            <path class="skin" d="M96 48c30-18 66-10 82 10s20 52 10 82c-8 24-32 48-50 74-22 32-42 60-56 78-14 18-30 22-44 10s0-40 12-66 34-72 58-104 34-54 26-74-28-34-48-30-34 18-38 30c-4 12 4 22 14 24s24-4 34-16z" opacity="0.14" />
+            <path class="line" d="M98 52c24-16 54-10 74 10s24 50 16 78-34 52-54 72-44 54-58 72-24 40-10 48 30-2 54-30 46-64 64-98 28-64 22-90-22-46-42-56c-20-10-46-12-66-2-20 10-32 28-32 48s10 36 24 46 32 16 48 10"/>
+            <path class="line" d="M138 86c-14 8-34 24-46 44s-18 42-6 52 32 2 44-22 18-54 14-70-10-26-18-24-18 12-8 20"/>
+          </svg>
+        `
+      };
+      return svg[type] || svg['body-1'];
+    }
+
+    function buildSlides() {
+      SLIDES.forEach((slide, index) => {
+        const div = document.createElement('div');
+        div.className = 'slide';
+        div.dataset.index = index;
+        div.innerHTML = `
+          <div class="timeline">
+            ${SLIDES.map((_, i) => `<div class="stage ${i <= index ? 'active' : ''}"></div>`).join('')}
+          </div>
+          <div class="figure">
+            ${createFigure(slide.figure)}
+            <div class="glow-detail"></div>
+          </div>
+          <div>
+            <div class="scene-label">${slide.label}</div>
+            <div class="title">${slide.title}</div>
+            <p class="body-copy">${slide.copy}</p>
+          </div>
+        `;
+        slidesEl.appendChild(div);
+      });
+    }
+
+    const animationPatterns = [
+      { enter: 'enter-from-bottom', exit: 'exit-to-top' },
+      { enter: 'enter-from-left',   exit: 'exit-to-right' },
+      { enter: 'enter-from-right',  exit: 'exit-to-left' },
+      { enter: 'enter-from-top',    exit: 'exit-to-bottom' },
+      { enter: 'enter-from-bottom', exit: 'exit-to-top' },
+      { enter: 'enter-from-left',   exit: 'exit-to-right' },
+      { enter: 'enter-from-right',  exit: 'exit-to-left' },
+      { enter: 'enter-from-top',    exit: 'exit-to-bottom' }
+    ];
+
+    function animationFor(index) {
+      return animationPatterns[index % animationPatterns.length];
+    }
+
+    const animationPatterns = [
+      { enter: 'enter-from-bottom', exit: 'exit-to-top' },
+      { enter: 'enter-from-left',   exit: 'exit-to-right' },
+      { enter: 'enter-from-right',  exit: 'exit-to-left' },
+      { enter: 'enter-from-top',    exit: 'exit-to-bottom' },
+      { enter: 'enter-from-bottom', exit: 'exit-to-top' },
+      { enter: 'enter-from-left',   exit: 'exit-to-right' },
+      { enter: 'enter-from-right',  exit: 'exit-to-left' },
+      { enter: 'enter-from-top',    exit: 'exit-to-bottom' }
+    ];
+
+    function animationFor(index) {
+      return animationPatterns[index % animationPatterns.length];
+    }
+
+    let current = 0;
+    function activate(index) {
+      const slideEls = document.querySelectorAll('.slide');
+      slideEls.forEach((slide, i) => {
+        slide.classList.toggle('active', i === index);
+      });
+    }
+
+    function goNext() {
+      const next = (current + 1) % SLIDES.length;
+      const currentSlide = document.querySelector(`.slide[data-index="${current}"]`);
+      const nextSlide = document.querySelector(`.slide[data-index="${next}"]`);
+      const currentAnim = animationFor(current);
+      const nextAnim = animationFor(next);
+
+      currentSlide.classList.remove('active');
+      currentSlide.classList.add(currentAnim.exit);
+
+      nextSlide.classList.remove('exit-to-left', 'exit-to-right', 'exit-to-top', 'exit-to-bottom', 'enter-from-left', 'enter-from-right', 'enter-from-top', 'enter-from-bottom');
+      nextSlide.classList.add(nextAnim.enter);
+      nextSlide.offsetHeight;
+      nextSlide.classList.add('active');
+
+      current = next;
+    }
+
+    buildSlides();
+    activate(0);
+
+    const targetDuration = 44;
+    const interval = targetDuration / SLIDES.length * 1000;
+    let timer = setInterval(goNext, interval);
+
+    document.body.addEventListener('click', () => {
+      goNext();
+      clearInterval(timer);
+      timer = setInterval(goNext, interval);
+    });  </script>
+</body>
+</html>

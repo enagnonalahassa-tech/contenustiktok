@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rendu Script 9:16 - Élégance Féminine</title>
+  
+  <!-- Polices Google Premium (Serif de luxe et Sans-serif élégant) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Outfit:wght@300;400;500;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="rendu.css">
+</head>
+<body class="theme-soft-power"> <!-- Thème par défaut: Soft Power -->
+
+  <!-- Sélecteur de Variantes Premium en Haut -->
+  <nav class="variant-selector-bar">
+    <span class="selector-title">Variante Artistique :</span>
+    <div class="variant-pills">
+      <button class="variant-pill active" data-variant="soft-power">
+        <span class="pill-dot color-pink"></span> Douce Élégance
+      </button>
+      <button class="variant-pill" data-variant="emerald-luxury">
+        <span class="pill-dot color-emerald"></span> Force Émeraude
+      </button>
+      <button class="variant-pill" data-variant="satin-night">
+        <span class="pill-dot color-plum"></span> Nuit Satinée
+      </button>
+    </div>
+  </nav>
+
+  <!-- Cadre Principal au format 9:16 -->
+  <div class="viewport-9-16-container">
+    <div class="presentation-container" id="presentation-container">
+      <!-- Les slides seront générées dynamiquement par rendu.js -->
+      <div class="slide active">
+        <div class="slide-content">
+          <h1 class="main-text">MOTIVATION <span class="highlight">≠</span> SYSTÈME</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Épurée en Bas -->
+  <footer class="presentation-footer">
+    <div class="nav-info">
+      <span class="scene-badge" id="scene-badge">1 / 5</span>
+      <span class="scene-duration" id="scene-duration">0-3s • HOOK</span>
+    </div>
+    <div class="nav-controls">
+      <button class="nav-btn" id="btn-prev" title="Précédent (←)">←</button>
+      <button class="nav-btn" id="btn-next" title="Suivant (→ ou Espace)">→</button>
+    </div>
+  </footer>
+
+  <!-- Instructions de navigation temporaires -->
+  <div class="nav-hint" id="nav-hint">
+    <span>💡 Clavier : Utilisez <strong>←</strong> , <strong>→</strong> ou <strong>Espace</strong>. Vous pouvez aussi cliquer sur l'écran.</span>
+  </div>
+
+  <!-- Toast de notification -->
+  <div class="toast hidden" id="toast">Message</div>
+
+  <!-- JavaScript Logique -->
+  <script src="rendu.js"></script>
+</body>
+</html>

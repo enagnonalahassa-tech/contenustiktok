@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Générateur & Previewer de Vidéo de Script0</title>
+  
+  <!-- Polices Google Premium -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@400;600;700;800;900&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background Glows -->
+  <div class="glow-bg glow-purple"></div>
+  <div class="glow-bg glow-green"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <span class="icon">🎬</span>
+      <h1>Studio Vidéo <span class="gradient-text">Antigravity</span></h1>
+    </div>
+    <div class="header-actions">
+      <button id="btn-restart-guide" class="btn btn-secondary">
+        <span class="btn-icon">🔄</span> Réinitialiser
+      </button>
+      <span class="status-badge" id="status-text">Prêt à lire script0</span>
+    </div>
+  </header>
+
+  <main class="app-container">
+    
+    <!-- COLONNE GAUCHE: ÉDITEUR ET STORIES -->
+    <section class="panel panel-left card">
+      <div class="panel-header">
+        <span class="panel-icon">📝</span>
+        <h2>Script & Séquences</h2>
+      </div>
+      
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="tab-viewer">🎬 Séquenceur</button>
+        <button class="tab-btn" data-tab="tab-editor">✍️ Éditeur Raw</button>
+      </div>
+
+      <div class="tab-content" id="tab-viewer">
+        <p class="section-desc">Cliquez sur une séquence pour positionner le lecteur à son départ.</p>
+        <div class="sequences-list" id="sequences-container">
+          <!-- Chargé dynamiquement par app.js -->
+          <div class="sequence-skeleton"></div>
+          <div class="sequence-skeleton"></div>
+          <div class="sequence-skeleton"></div>
+        </div>
+      </div>
+
+      <div class="tab-content hidden" id="tab-editor">
+        <div class="editor-wrapper">
+          <textarea id="script-textarea" placeholder="Collez votre script ici..." spellcheck="false"></textarea>
+          <div class="editor-actions">
+            <span class="char-count" id="editor-char-count">0 caractères</span>
+            <button id="btn-apply-script" class="btn btn-primary btn-sm">Mettre à jour le Previewer</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COLONNE CENTRALE: LE SMARTPHONE DE PREVIEW 9:16 -->
+    <section class="panel-center">
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen" id="preview-screen">
+            
+            <!-- CONTENU DE LA VIDÉO (9:16) -->
+            <div class="video-container" id="video-viewport">
+              
+              <!-- Couches d'animation de texte -->
+              <div class="video-background" id="video-bg"></div>
+              
+              <!-- Effets de particules ou de lumière en fond -->
+              <div class="video-particles" id="video-particles"></div>
+
+              <!-- Éléments textuels principaux animés -->
+              <div class="video-text-wrapper">
+                <div class="main-text" id="video-main-text">MOTIVATION ≠ SYSTÈME</div>
+              </div>
+
+              <!-- Indicateur de progression visuel discret -->
+              <div class="video-progress-circle-wrap">
+                <svg class="progress-ring" width="40" height="40">
+                  <circle class="progress-ring__circle-bg" stroke="rgba(255, 255, 255, 0.2)" stroke-width="3" fill="transparent" r="16" cx="20" cy="20"/>
+                  <circle class="progress-ring__circle" id="progress-circle" stroke="#22C55E" stroke-width="3" fill="transparent" r="16" cx="20" cy="20"/>
+                </svg>
+                <span class="progress-ring-text" id="progress-circle-text">45s</span>
+              </div>
+
+              <!-- Superposition interface TikTok / Shorts -->
+              <div class="tiktok-overlay">
+                <div class="tiktok-right-actions">
+                  <div class="tiktok-action">
+                    <div class="tiktok-icon-circle"><span class="tk-icon">👤</span></div>
+                    <span class="tk-label">Profil</span>
+                  </div>
+                  <div class="tiktok-action active">
+                    <div class="tiktok-icon-circle"><span class="tk-icon">❤️</span></div>
+                    <span class="tk-label" id="tiktok-likes">12.4K</span>
+                  </div>
+                  <div class="tiktok-action">
+                    <div class="tiktok-icon-circle"><span class="tk-icon">💬</span></div>
+                    <span class="tk-label" id="tiktok-comments">482</span>
+                  </div>
+                  <div class="tiktok-action">
+                    <div class="tiktok-icon-circle"><span class="tk-icon">🔖</span></div>
+                    <span class="tk-label">982</span>
+                  </div>
+                  <div class="tiktok-action">
+                    <div class="tiktok-icon-circle disc-spin"><span class="tk-icon">🎵</span></div>
+                  </div>
+                </div>
+
+                <div class="tiktok-bottom-info">
+                  <div class="tiktok-author">@systeme.expert</div>
+                  <div class="tiktok-description">Motivation vs Système. La clé de la régularité. #productivite #succes #business</div>
+                  <div class="tiktok-audio-track">
+                    <span class="music-icon">🎵</span>
+                    <span class="music-title">Minimal Corporate - TikTok Library (15% Vol)</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- ÉLÉMENTS DE CONTRÔLE DU LECTEUR -->
+            <div class="player-controls">
+              
+              <!-- Barre de progression temporelle -->
+              <div class="timeline-container">
+                <span class="time-label" id="current-time">00:00</span>
+                <div class="timeline-bar" id="timeline-slider-bar">
+                  <div class="timeline-progress" id="timeline-fill"></div>
+                  <div class="timeline-handle" id="timeline-thumb"></div>
+                </div>
+                <span class="time-label" id="total-time">00:45</span>
+              </div>
+
+              <!-- Ligne de boutons de contrôle -->
+              <div class="control-buttons">
+                <button class="ctrl-btn" id="btn-backward" title="- 3 secondes">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 5V19L3 12L12 5M21 5V19L12 12L21 5Z"/></svg>
+                </button>
+                
+                <button class="ctrl-btn ctrl-btn-play" id="btn-play-pause" title="Play / Pause">
+                  <div id="play-icon">
+                    <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M8 5V19L19 12L8 5Z"/></svg>
+                  </div>
+                  <div id="pause-icon" class="hidden">
+                    <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M6 19H10V5H6V19ZM14 5V19H18V5H18V5Z"/></svg>
+                  </div>
+                </button>
+
+                <button class="ctrl-btn" id="btn-forward" title="+ 3 secondes">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M4 18V6L13 12L4 18M13 18V6L22 12L13 18Z"/></svg>
+                </button>
+
+                <button class="ctrl-btn" id="btn-mute" title="Activer / Désactiver la voix off">
+                  <span id="mute-icon">🔊</span>
+                </button>
+              </div>
+
+              <!-- Info de la voix off actuelle -->
+              <div class="voice-status" id="voice-track-info">
+                Voix : Adam (FR) - Vitesse 1.1x
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COLONNE DROITE: GUIDE CAPCUT & FEEDBACK -->
+    <section class="panel panel-right card">
+      <div class="panel-header">
+        <span class="panel-icon">⚙️</span>
+        <h2>Guide & Automatisation</h2>
+      </div>
+
+      <div class="accordion">
+        
+        <!-- Accordéon 1: Guide CapCut -->
+        <div class="accordion-item active">
+          <div class="accordion-trigger" data-target="guide-capcut">
+            <h3>🎬 Montage CapCut (10 mins)</h3>
+            <span class="arrow">▼</span>
+          </div>
+          <div class="accordion-content" id="guide-capcut">
+            <ul class="guide-list">
+              <li>
+                <div class="list-number">1</div>
+                <div><strong>Format :</strong> Créez un projet 1080x1920 à 25fps.</div>
+              </li>
+              <li>
+                <div class="list-number">2</div>
+                <div><strong>Fond :</strong> Appliquez une couleur unie <code class="color-hex">#0F172A</code>.</div>
+              </li>
+              <li>
+                <div class="list-number">3</div>
+                <div><strong>Police :</strong> Montserrat Bold ou Inter Bold, couleur <code class="color-hex">#F8FAFC</code>. Les mots clés importants en vert vif <code class="color-hex">#22C55E</code>.</div>
+              </li>
+              <li>
+                <div class="list-number">4</div>
+                <div><strong>Transitions :</strong> Texte "Entrée Pop" + "Sortie Fade" pour garder l'attention.</div>
+              </li>
+              <li>
+                <div class="list-number">5</div>
+                <div><strong>Sonorisation :</strong> Voix TikTok "Adam FR" ou ElevenLabs (calme). Vitesse fixée à <strong>1.1x</strong>. Musique "Minimal Corporate" à 15% du volume.</div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Accordéon 2: Pourquoi ce format marche -->
+        <div class="accordion-item">
+          <div class="accordion-trigger" data-target="why-format">
+            <h3>📈 Pourquoi ce format performe</h3>
+            <span class="arrow">▶</span>
+          </div>
+          <div class="accordion-content hidden" id="why-format">
+            <div class="tips-box">
+              <p>🎯 <strong>Hook fort (0-3s) :</strong> Casser une croyance populaire ("motivation vs système") arrête immédiatement le défilement (scroll) de l'utilisateur.</p>
+              <p>💡 <strong>Exemple concret de friction réduite :</strong> L'exemple de "préparer ses baskets la veille" permet une compréhension instantanée sans blabla.</p>
+              <p>💬 <strong>CTA conversationnel :</strong> Demander aux utilisateurs de commenter "SYSTÈME" envoie des signaux positifs massifs aux algorithmes TikTok/Shorts et génère des opportunités de réponse.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordéon 3: Le Système en Action (Checklist interactive) -->
+        <div class="accordion-item">
+          <div class="accordion-trigger" data-target="system-action">
+            <h3>✅ Checklist interactive du "Système"</h3>
+            <span class="arrow">▶</span>
+          </div>
+          <div class="accordion-content hidden" id="system-action">
+            <p class="section-desc">Appliquez le système de la vidéo à votre propre routine de création :</p>
+            <div class="system-checklist">
+              <label class="check-item">
+                <input type="checkbox" id="chk-baskets">
+                <span class="check-box"></span>
+                <span class="check-text">Préparer ses outils et templates la veille</span>
+              </label>
+              <label class="check-item">
+                <input type="checkbox" id="chk-alarme">
+                <span class="check-box"></span>
+                <span class="check-text">Définir un créneau fixe de 30 min par jour</span>
+              </label>
+              <label class="check-item">
+                <input type="checkbox" id="chk-pote">
+                <span class="check-box"></span>
+                <span class="check-text">Créer le premier template de post sur CapCut</span>
+              </label>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="system-check-progress" style="width: 0%;"></div>
+            </div>
+            <p class="progress-bar-label" id="system-check-label">0% complété</p>
+          </div>
+        </div>
+
+        <!-- Accordéon 4: Simulateur de Performance & Conseils IA -->
+        <div class="accordion-item">
+          <div class="accordion-trigger" data-target="ia-insights">
+            <h3>💡 Optimiseur de Script Vidéo 2</h3>
+            <span class="arrow">▶</span>
+          </div>
+          <div class="accordion-content hidden" id="ia-insights">
+            <p class="section-desc">Indiquez les performances de votre vidéo 1 après l'avoir postée pour ajuster instantanément le script de la vidéo 2.</p>
+            <div class="simulator-form">
+              <div class="form-group">
+                <label for="sim-completion">Taux de complétion moyen (%)</label>
+                <input type="number" id="sim-completion" min="0" max="100" placeholder="Ex: 35">
+              </div>
+              <div class="form-group">
+                <label for="sim-comments">Nombre de commentaires "SYSTÈME"</label>
+                <input type="number" id="sim-comments" min="0" placeholder="Ex: 12">
+              </div>
+              <button id="btn-simulate" class="btn btn-primary btn-block">Ajuster le script 2</button>
+            </div>
+            
+            <div id="simulation-output" class="simulation-output hidden">
+              <!-- Recommandation affichée de manière dynamique -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Notification Toast -->
+  <div class="toast hidden" id="toast">Message</div>
+
+  <!-- JavaScript Application -->
+  <script src="app.js"></script>
+</body>
+</html>
