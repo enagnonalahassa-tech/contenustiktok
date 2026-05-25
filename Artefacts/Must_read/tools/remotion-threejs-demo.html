@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Remotion + Three.js — Interactive Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root,[data-theme="dark"]{
+  --bg:#0f0f11;--surface:#17171a;--surface2:#1e1e22;--border:#2a2a30;
+  --text:#e8e8ec;--muted:#888896;--faint:#44444c;
+  --primary:#7c6af7;--primary-hover:#6b58f0;--primary-glow:rgba(124,106,247,0.25);
+  --green:#4ade80;--orange:#fb923c;--blue:#60a5fa;--pink:#f472b6;
+  --radius:8px;--radius-lg:14px;
+  --font-body:'Inter',sans-serif;--font-mono:'JetBrains Mono',monospace;
+  --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-6:24px;--space-8:32px;--space-12:48px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased;background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:15px}
+body{min-height:100dvh;display:flex;flex-direction:column}
+img,canvas{display:block;max-width:100%}
+button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
+
+/* Layout */
+.app{display:grid;grid-template-columns:1fr 420px;grid-template-rows:56px 1fr auto;height:100dvh;gap:0}
+.header{grid-column:1/-1;display:flex;align-items:center;gap:var(--space-4);padding:0 var(--space-6);border-bottom:1px solid var(--border);background:var(--surface)}
+.logo{display:flex;align-items:center;gap:var(--space-2);font-weight:600;font-size:15px}
+.logo svg{color:var(--primary)}
+.badge{font-size:11px;padding:2px 8px;border-radius:999px;background:rgba(124,106,247,0.18);color:var(--primary);font-weight:600;letter-spacing:.03em}
+.spacer{flex:1}
+.header-stat{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green)}
+
+/* Canvas panel */
+.canvas-panel{position:relative;background:#000;overflow:hidden}
+canvas#scene{width:100%;height:100%;display:block}
+.timeline-overlay{position:absolute;bottom:0;left:0;right:0;padding:var(--space-4) var(--space-6);background:linear-gradient(transparent,rgba(0,0,0,.85));display:flex;flex-direction:column;gap:var(--space-3)}
+.frame-display{font-family:var(--font-mono);font-size:12px;color:var(--muted);display:flex;justify-content:space-between}
+.frame-display span:first-child{color:var(--text);font-weight:600}
+.progress-bar{height:3px;background:var(--surface2);border-radius:2px;cursor:pointer;position:relative}
+.progress-fill{height:100%;background:var(--primary);border-radius:2px;transition:width .05s linear;position:relative}
+.progress-fill::after{content:'';position:absolute;right:-5px;top:-3px;width:10px;height:10px;background:var(--primary);border-radius:50%;box-shadow:0 0 8px var(--primary)}
+.controls{display:flex;align-items:center;gap:var(--space-3)}
+.btn-play{width:36px;height:36px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;transition:background .15s,transform .1s,box-shadow .15s}
+.btn-play:hover{background:var(--primary-hover);box-shadow:0 0 16px var(--primary-glow);transform:scale(1.05)}
+.btn-play:active{transform:scale(.96)}
+.time-label{font-family:var(--font-mono);font-size:13px;color:var(--muted)}
+.time-label strong{color:var(--text)}
+.control-btns{display:flex;gap:var(--space-2);margin-left:auto}
+.btn-sm{padding:4px 12px;border-radius:var(--radius);font-size:12px;font-weight:500;border:1px solid var(--border);color:var(--muted);transition:all .15s}
+.btn-sm:hover{color:var(--text);border-color:var(--primary);background:rgba(124,106,247,.08)}
+.btn-sm.active{color:var(--primary);border-color:var(--primary);background:rgba(124,106,247,.12)}
+
+/* Code panel */
+.code-panel{background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.panel-tabs{display:flex;border-bottom:1px solid var(--border)}
+.tab{padding:var(--space-3) var(--space-4);font-size:13px;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;transition:all .15s;cursor:pointer}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--primary);border-color:var(--primary)}
+.panel-body{flex:1;overflow-y:auto;padding:var(--space-4)}
+.code-block{font-family:var(--font-mono);font-size:12px;line-height:1.7;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--space-4);overflow-x:auto;white-space:pre}
+.code-block .kw{color:#c792ea}.code-block .fn{color:#82aaff}.code-block .str{color:#c3e88d}
+.code-block .num{color:#f78c6c}.code-block .cm{color:#546e7a;font-style:italic}
+.code-block .var{color:#eeffff}.code-block .prop{color:var(--orange)}
+.highlight-line{background:rgba(124,106,247,.12);display:block;margin:-1px -16px;padding:1px 16px;border-left:2px solid var(--primary)}
+.section-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:var(--space-6) 0 var(--space-3)}
+.section-label:first-child{margin-top:0}
+.insight-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--space-4);margin-bottom:var(--space-3)}
+.insight-card h4{font-size:13px;font-weight:600;color:var(--text);margin-bottom:var(--space-2);display:flex;align-items:center;gap:var(--space-2)}
+.insight-card p{font-size:12px;color:var(--muted);line-height:1.6}
+.insight-card code{font-family:var(--font-mono);background:var(--bg);padding:1px 5px;border-radius:4px;font-size:11px;color:var(--primary)}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:2px 7px;border-radius:999px;font-weight:500}
+.pill-green{background:rgba(74,222,128,.12);color:var(--green)}
+.pill-blue{background:rgba(96,165,250,.12);color:var(--blue)}
+.pill-orange{background:rgba(251,146,60,.12);color:var(--orange)}
+
+/* Bottom bar */
+.bottom-bar{grid-column:1/-1;border-top:1px solid var(--border);padding:var(--space-2) var(--space-6);display:flex;align-items:center;gap:var(--space-6);background:var(--surface);font-size:12px;color:var(--muted)}
+.stat{display:flex;align-items:center;gap:5px}
+.stat strong{color:var(--text);font-weight:600}
+
+/* Scene params */
+.param-row{display:flex;justify-content:space-between;align-items:center;padding:var(--space-2) 0;border-bottom:1px solid var(--border)}
+.param-row:last-child{border-bottom:none}
+.param-name{font-size:12px;color:var(--muted);font-family:var(--font-mono)}
+.param-value{font-size:12px;font-weight:600;color:var(--text);font-family:var(--font-mono)}
+.param-value.active{color:var(--primary)}
+
+@media(max-width:900px){
+  .app{grid-template-columns:1fr;grid-template-rows:56px 55vmin 1fr auto}
+  .code-panel{border-left:none;border-top:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- Header -->
+<header class="header">
+  <div class="logo">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" fill="currentColor"/><rect x="14" y="3" width="7" height="7" rx="1.5" fill="currentColor" opacity=".5"/><rect x="3" y="14" width="7" height="7" rx="1.5" fill="currentColor" opacity=".5"/><rect x="14" y="14" width="7" height="7" rx="1.5" fill="currentColor" opacity=".25"/></svg>
+    Remotion + Three.js
+  </div>
+  <span class="badge">Interactive Demo</span>
+  <div class="spacer"></div>
+  <div class="header-stat"><div class="dot"></div> Live rendering</div>
+</header>
+
+<!-- Canvas panel -->
+<div class="canvas-panel">
+  <canvas id="scene"></canvas>
+  <div class="timeline-overlay">
+    <div class="frame-display">
+      <span id="frame-counter">Frame: 0</span>
+      <span id="fps-label">30 fps · 150 frames · 5s</span>
+    </div>
+    <div class="progress-bar" id="progress-bar">
+      <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+    <div class="controls">
+      <button class="btn-play" id="btn-play" aria-label="Play/Pause">
+        <svg id="play-icon" width="16" height="16" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
+      </button>
+      <span class="time-label"><strong id="time-current">0.00s</strong> / 5.00s</span>
+      <div class="control-btns">
+        <button class="btn-sm active" id="btn-cube" onclick="setScene('cube')">Cube</button>
+        <button class="btn-sm" id="btn-particle" onclick="setScene('particle')">Particles</button>
+        <button class="btn-sm" id="btn-wave" onclick="setScene('wave')">Wave</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Code panel -->
+<div class="code-panel">
+  <div class="panel-tabs">
+    <div class="tab active" onclick="showTab('code',this)">Code</div>
+    <div class="tab" onclick="showTab('params',this)">Live Values</div>
+    <div class="tab" onclick="showTab('why',this)">Why It Matters</div>
+  </div>
+  <div class="panel-body" id="panel-code">
+    <div class="section-label">Remotion Component</div>
+    <div class="code-block" id="code-display"></div>
+    <div class="section-label" style="margin-top:20px">Key Insight</div>
+    <div class="insight-card">
+      <h4>🔑 useCurrentFrame()</h4>
+      <p>This single hook is the bridge. Three.js normally uses <code>requestAnimationFrame</code> (continuous loop). Remotion <strong>overrides the animation loop</strong> and calls your component with a specific <code>frame</code> number. The 3D scene is deterministic — frame 42 always looks exactly the same.</p>
+    </div>
+    <div class="insight-card">
+      <h4>🎬 Headless Chromium rendering</h4>
+      <p>To export video, Remotion opens a headless Chrome, visits each frame (0, 1, 2…), screenshots the canvas, then stitches everything with ffmpeg. Your 3D animation is literally screenshots of a web page turned into an mp4.</p>
+    </div>
+  </div>
+  <div class="panel-body" id="panel-params" style="display:none">
+    <div class="section-label">Frame-Derived Values (Live)</div>
+    <div id="params-display"></div>
+    <div class="section-label">Remotion interpolation</div>
+    <div class="code-block"><span class="kw">const</span> <span class="var">progress</span> = <span class="fn">interpolate</span>(
+  frame,
+  [<span class="num">0</span>, <span class="num">150</span>],
+  [<span class="num">0</span>, <span class="num">1</span>],
+  { easing: <span class="fn">Easing.inOut</span>(<span class="fn">Easing.ease</span>) }
+);
+<span class="cm">// progress goes 0 → 1 over 150 frames
+// Easing makes it feel physical, not robotic</span></div>
+  </div>
+  <div class="panel-body" id="panel-why" style="display:none">
+    <div class="section-label">Traditional vs Code-based</div>
+    <div class="insight-card">
+      <h4><span class="pill pill-orange">❌ After Effects / Blender</span></h4>
+      <p>You manually drag keyframes on a timeline. To make 100 videos with different data (product names, colors, numbers), you manually do it 100 times or learn proprietary scripting.</p>
+    </div>
+    <div class="insight-card">
+      <h4><span class="pill pill-green">✅ Remotion + Three.js</span></h4>
+      <p>Your video is a React component. A <code>for</code> loop generates 100 videos from a JSON file. Git tracks every change. AI tools like Claude can write the animation code from a description.</p>
+    </div>
+    <div class="insight-card">
+      <h4><span class="pill pill-blue">💡 For you as a course creator</span></h4>
+      <p>Imagine auto-generating 3D architecture diagrams, animated data visualizations, or per-student personalized explainer videos — entirely from code, no video editor open.</p>
+    </div>
+    <div class="section-label">What Three.js specifically adds</div>
+    <div class="insight-card">
+      <h4>🧊 3D rendering engine</h4>
+      <p>Remotion alone = DOM + CSS animations (2D). Three.js = WebGL 3D engine with geometries, lights, materials, shaders, particle systems. The <code>&lt;ThreeCanvas&gt;</code> component syncs Three.js's render call to Remotion's frame clock instead of <code>requestAnimationFrame</code>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom bar -->
+<div class="bottom-bar">
+  <div class="stat">Scene: <strong id="stat-scene">Rotating Cube</strong></div>
+  <div class="stat">Frame: <strong id="stat-frame">0</strong> / 150</div>
+  <div class="stat">Rotation: <strong id="stat-rot">0.00 rad</strong></div>
+  <div class="stat" style="margin-left:auto;color:var(--faint)">Scrub timeline to inspect any frame</div>
+</div>
+
+</div>
+
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+
+// ─── State ───────────────────────────────────────────────────────────────────
+const TOTAL_FRAMES = 150;
+const FPS = 30;
+let currentFrame = 0;
+let playing = false;
+let raf = null;
+let lastTimestamp = null;
+let frameAccum = 0;
+let currentScene = 'cube';
+
+// ─── Three.js Setup ──────────────────────────────────────────────────────────
+const canvas = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+
+const scenes = {};
+
+// ── CUBE scene ──
+function buildCubeScene() {
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0a0a10);
+  const cam = new THREE.PerspectiveCamera(60, 1, 0.1, 100);
+  cam.position.set(0, 1.5, 3.5);
+  cam.lookAt(0, 0, 0);
+
+  const ambient = new THREE.AmbientLight(0x7c6af7, 0.4);
+  scene.add(ambient);
+  const dir = new THREE.DirectionalLight(0xffffff, 1.2);
+  dir.position.set(3, 5, 3);
+  dir.castShadow = true;
+  scene.add(dir);
+  const pointL = new THREE.PointLight(0x60a5fa, 2, 8);
+  pointL.position.set(-2, 2, 2);
+  scene.add(pointL);
+
+  // Grid floor
+  const grid = new THREE.GridHelper(8, 16, 0x2a2a40, 0x1a1a28);
+  grid.position.y = -1.1;
+  scene.add(grid);
+
+  // Main cube
+  const geo = new THREE.BoxGeometry(1.2, 1.2, 1.2);
+  const mat = new THREE.MeshStandardMaterial({
+    color: 0x7c6af7, metalness: 0.6, roughness: 0.2,
+    emissive: 0x3a2080, emissiveIntensity: 0.3
+  });
+  const cube = new THREE.Mesh(geo, mat);
+  cube.castShadow = true;
+  scene.add(cube);
+
+  // Wireframe overlay
+  const wmat = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, transparent: true, opacity: 0.06 });
+  const wire = new THREE.Mesh(geo.clone(), wmat);
+  wire.scale.setScalar(1.01);
+  scene.add(wire);
+
+  // Orbiting smaller cube
+  const small = new THREE.Mesh(
+    new THREE.BoxGeometry(0.3, 0.3, 0.3),
+    new THREE.MeshStandardMaterial({ color: 0xf472b6, metalness: 0.8, roughness: 0.1, emissive: 0x800040, emissiveIntensity: 0.4 })
+  );
+  scene.add(small);
+
+  return {
+    scene, cam,
+    render(frame) {
+      const t = frame / TOTAL_FRAMES;
+      const angle = t * Math.PI * 2;
+      cube.rotation.x = angle * 0.7;
+      cube.rotation.y = angle;
+      wire.rotation.copy(cube.rotation);
+      small.position.set(Math.cos(angle * 2) * 2, Math.sin(angle * 3) * 0.4, Math.sin(angle * 2) * 2);
+      small.rotation.x = angle * 2;
+      small.rotation.z = angle * 1.5;
+      pointL.position.x = Math.sin(angle) * 3;
+      pointL.position.z = Math.cos(angle) * 3;
+      return { rotation: angle.toFixed(2), scale: cube.scale.x.toFixed(2), orbitAngle: (angle * 2 % (Math.PI*2)).toFixed(2) };
+    }
+  };
+}
+
+// ── PARTICLE scene ──
+function buildParticleScene() {
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x040408);
+  const cam = new THREE.PerspectiveCamera(70, 1, 0.1, 100);
+  cam.position.set(0, 0, 5);
+
+  const N = 800;
+  const positions = new Float32Array(N * 3);
+  const colors = new Float32Array(N * 3);
+  const phases = new Float32Array(N);
+  const radii = new Float32Array(N);
+  for (let i = 0; i < N; i++) {
+    const r = 0.5 + Math.random() * 2.5;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    positions[i*3]   = r * Math.sin(phi) * Math.cos(theta);
+    positions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+    positions[i*3+2] = r * Math.cos(phi);
+    phases[i] = Math.random() * Math.PI * 2;
+    radii[i] = r;
+    const c = new THREE.Color().setHSL(0.65 + Math.random() * 0.2, 1, 0.5 + Math.random() * 0.3);
+    colors[i*3] = c.r; colors[i*3+1] = c.g; colors[i*3+2] = c.b;
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions.slice(), 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  const mat = new THREE.PointsMaterial({ size: 0.04, vertexColors: true, transparent: true, opacity: 0.9 });
+  const particles = new THREE.Points(geo, mat);
+  scene.add(particles);
+
+  const origPos = positions.slice();
+  const posAttr = geo.getAttribute('position');
+
+  return {
+    scene, cam,
+    render(frame) {
+      const t = frame / TOTAL_FRAMES;
+      const angle = t * Math.PI * 2;
+      particles.rotation.y = angle * 0.5;
+      particles.rotation.x = angle * 0.2;
+      for (let i = 0; i < N; i++) {
+        const pulse = 1 + 0.12 * Math.sin(angle * 3 + phases[i]);
+        posAttr.array[i*3]   = origPos[i*3]   * pulse;
+        posAttr.array[i*3+1] = origPos[i*3+1] * pulse;
+        posAttr.array[i*3+2] = origPos[i*3+2] * pulse;
+      }
+      posAttr.needsUpdate = true;
+      return { particleCount: N, pulseAmplitude: '0.12', rotationY: (angle * 0.5).toFixed(2) };
+    }
+  };
+}
+
+// ── WAVE scene ──
+function buildWaveScene() {
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x030508);
+  scene.fog = new THREE.FogExp2(0x030508, 0.08);
+  const cam = new THREE.PerspectiveCamera(65, 1, 0.1, 100);
+  cam.position.set(0, 4, 7);
+  cam.lookAt(0, 0, 0);
+
+  const ambient = new THREE.AmbientLight(0x60a5fa, 0.5);
+  scene.add(ambient);
+  const point1 = new THREE.PointLight(0x7c6af7, 3, 12);
+  point1.position.set(0, 3, 0);
+  scene.add(point1);
+
+  const GRID = 40;
+  const STEP = 0.18;
+  const geo = new THREE.PlaneGeometry((GRID-1)*STEP, (GRID-1)*STEP, GRID-1, GRID-1);
+  geo.rotateX(-Math.PI / 2);
+  const mat = new THREE.MeshStandardMaterial({
+    color: 0x1a0a40, wireframe: false, metalness: 0.5, roughness: 0.3,
+    emissive: 0x0a0430, emissiveIntensity: 0.8, side: THREE.DoubleSide
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.receiveShadow = true;
+  scene.add(mesh);
+  const wireMat = new THREE.MeshBasicMaterial({ color: 0x4040a0, wireframe: true, transparent: true, opacity: 0.35 });
+  const wireMesh = new THREE.Mesh(geo.clone(), wireMat);
+  scene.add(wireMesh);
+
+  const posAttr = geo.getAttribute('position');
+  const wireAttr = wireMesh.geometry.getAttribute('position');
+
+  return {
+    scene, cam,
+    render(frame) {
+      const t = frame / TOTAL_FRAMES * Math.PI * 2;
+      let maxH = 0;
+      for (let i = 0; i < posAttr.count; i++) {
+        const x = posAttr.getX(i);
+        const z = posAttr.getZ(i);
+        const d = Math.sqrt(x*x + z*z);
+        const h = Math.sin(d * 2.5 - t * 2) * 0.5 * Math.exp(-d * 0.15);
+        posAttr.setY(i, h);
+        wireAttr.setY(i, h);
+        if (h > maxH) maxH = h;
+      }
+      posAttr.needsUpdate = true;
+      wireAttr.needsUpdate = true;
+      geo.computeVertexNormals();
+      point1.position.x = Math.sin(t) * 2;
+      point1.position.z = Math.cos(t) * 2;
+      return { wavePhase: t.toFixed(2), vertexCount: posAttr.count, maxHeight: maxH.toFixed(3) };
+    }
+  };
+}
+
+scenes.cube = buildCubeScene();
+scenes.particle = buildParticleScene();
+scenes.wave = buildWaveScene();
+
+// ─── Code snippets ─────────────────────────────────────────────────────────
+const codeSnippets = {
+  cube: `<span class="kw">import</span> { <span class="var">useCurrentFrame</span>, <span class="var">interpolate</span> } <span class="kw">from</span> <span class="str">'remotion'</span>;
+<span class="kw">import</span> { <span class="var">ThreeCanvas</span> } <span class="kw">from</span> <span class="str">'@remotion/three'</span>;
+<span class="kw">import</span> * <span class="kw">as</span> <span class="var">THREE</span> <span class="kw">from</span> <span class="str">'three'</span>;
+
+<span class="kw">export const</span> <span class="fn">RotatingCube</span> = () => {
+  <span class="cm">// 🔑 THE KEY HOOK — frame is deterministic
+  // Frame 0, 1, 2 ... 149 — never "now()"</span>
+<span class="highlight-line">  <span class="kw">const</span> <span class="var">frame</span> = <span class="fn">useCurrentFrame</span>();</span>
+
+  <span class="cm">// Derive rotation purely from frame number</span>
+  <span class="kw">const</span> <span class="var">angle</span> = (<span class="var">frame</span> / <span class="num">150</span>) * Math.PI * <span class="num">2</span>;
+
+  <span class="kw">return</span> (
+    &lt;<span class="fn">ThreeCanvas</span>&gt;
+      &lt;<span class="fn">mesh</span> <span class="prop">rotation</span>={[<span class="var">angle</span> * <span class="num">0.7</span>, <span class="var">angle</span>, <span class="num">0</span>]}&gt;
+        &lt;<span class="fn">boxGeometry</span> <span class="prop">args</span>={[<span class="num">1.2</span>, <span class="num">1.2</span>, <span class="num">1.2</span>]} /&gt;
+        &lt;<span class="fn">meshStandardMaterial</span> <span class="prop">color</span>=<span class="str">"#7c6af7"</span> /&gt;
+      &lt;/<span class="fn">mesh</span>&gt;
+    &lt;/<span class="fn">ThreeCanvas</span>&gt;
+  );
+};`,
+
+  particle: `<span class="kw">import</span> { <span class="var">useCurrentFrame</span> } <span class="kw">from</span> <span class="str">'remotion'</span>;
+<span class="kw">import</span> { <span class="var">useRef</span>, <span class="var">useMemo</span> } <span class="kw">from</span> <span class="str">'react'</span>;
+<span class="kw">import</span> { <span class="var">useFrame</span>, <span class="var">ThreeCanvas</span> } <span class="kw">from</span> <span class="str">'@remotion/three'</span>;
+
+<span class="kw">export const</span> <span class="fn">ParticleField</span> = () => {
+<span class="highlight-line">  <span class="kw">const</span> <span class="var">frame</span> = <span class="fn">useCurrentFrame</span>();</span>
+  <span class="kw">const</span> <span class="var">angle</span> = (<span class="var">frame</span> / <span class="num">150</span>) * Math.PI * <span class="num">2</span>;
+
+  <span class="cm">// useMemo: compute particle positions once
+  // They're re-derived from frame — not stored</span>
+  <span class="kw">const</span> <span class="var">positions</span> = <span class="fn">useMemo</span>(() =>
+    <span class="fn">buildParticlePositions</span>(<span class="num">800</span>), []);
+
+  <span class="cm">// Pulse amplitude derived from frame</span>
+  <span class="kw">const</span> <span class="var">pulse</span> = <span class="num">1</span> + <span class="num">0.12</span> * Math.sin(<span class="var">angle</span> * <span class="num">3</span>);
+
+  <span class="kw">return</span> (
+    &lt;<span class="fn">ThreeCanvas</span>&gt;
+      &lt;<span class="fn">points</span>
+        <span class="prop">rotation-y</span>={<span class="var">angle</span> * <span class="num">0.5</span>}
+        <span class="prop">scale</span>={<span class="var">pulse</span>}
+      &gt;
+        &lt;<span class="fn">bufferGeometry</span> <span class="prop">attributes</span>={<span class="var">positions</span>} /&gt;
+        &lt;<span class="fn">pointsMaterial</span> <span class="prop">size</span>={<span class="num">0.04</span>} <span class="prop">vertexColors</span> /&gt;
+      &lt;/<span class="fn">points</span>&gt;
+    &lt;/<span class="fn">ThreeCanvas</span>&gt;
+  );
+};`,
+
+  wave: `<span class="kw">import</span> { <span class="var">useCurrentFrame</span>, <span class="var">interpolate</span> } <span class="kw">from</span> <span class="str">'remotion'</span>;
+
+<span class="kw">export const</span> <span class="fn">WaveGrid</span> = () => {
+<span class="highlight-line">  <span class="kw">const</span> <span class="var">frame</span> = <span class="fn">useCurrentFrame</span>();</span>
+  <span class="kw">const</span> <span class="var">t</span> = (<span class="var">frame</span> / <span class="num">150</span>) * Math.PI * <span class="num">2</span>;
+
+  <span class="cm">// Every vertex height is a pure function of
+  // (x, z, frame) — no stateful animation!</span>
+  <span class="kw">const</span> <span class="fn">getHeight</span> = (x, z) => {
+    <span class="kw">const</span> <span class="var">d</span> = Math.sqrt(x*x + z*z);
+    <span class="kw">return</span> Math.sin(<span class="var">d</span> * <span class="num">2.5</span> - <span class="var">t</span> * <span class="num">2</span>)
+         * <span class="num">0.5</span>
+         * Math.exp(-<span class="var">d</span> * <span class="num">0.15</span>);
+  };
+
+  <span class="cm">// This means: scrub to frame 73, you get
+  // frame 73 EXACTLY. No drift, no state.</span>
+  <span class="kw">return</span> (
+    &lt;<span class="fn">ThreeCanvas</span>&gt;
+      &lt;<span class="fn">WaveMesh</span> <span class="prop">getHeight</span>={<span class="fn">getHeight</span>} /&gt;
+    &lt;/<span class="fn">ThreeCanvas</span>&gt;
+  );
+};`
+};
+
+// ─── Rendering ──────────────────────────────────────────────────────────────
+function resize() {
+  const panel = canvas.parentElement;
+  const w = panel.clientWidth, h = panel.clientHeight;
+  renderer.setSize(w, h);
+  const s = scenes[currentScene];
+  s.cam.aspect = w / h;
+  s.cam.updateProjectionMatrix();
+}
+window.addEventListener('resize', resize);
+resize();
+
+let liveValues = {};
+function renderFrame(frame) {
+  const s = scenes[currentScene];
+  s.cam.aspect = canvas.width / canvas.height;
+  s.cam.updateProjectionMatrix();
+  liveValues = s.render(frame);
+  renderer.render(s.scene, s.cam);
+
+  // Update UI
+  document.getElementById('frame-counter').textContent = `Frame: ${frame}`;
+  document.getElementById('progress-fill').style.width = `${(frame / (TOTAL_FRAMES - 1)) * 100}%`;
+  document.getElementById('time-current').textContent = (frame / FPS).toFixed(2) + 's';
+  document.getElementById('stat-frame').textContent = frame;
+  document.getElementById('stat-rot').textContent = (frame / TOTAL_FRAMES * Math.PI * 2).toFixed(2) + ' rad';
+
+  // Live params panel
+  if (document.getElementById('panel-params').style.display !== 'none') updateParams(frame);
+}
+
+function updateParams(frame) {
+  const t = frame / TOTAL_FRAMES;
+  const angle = t * Math.PI * 2;
+  const eased = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+  const rows = [
+    ['frame', frame, true],
+    ['totalFrames', TOTAL_FRAMES, false],
+    ['t = frame/total', t.toFixed(4), true],
+    ['angle (radians)', angle.toFixed(4), true],
+    ['eased progress', eased.toFixed(4), false],
+    ...Object.entries(liveValues).map(([k,v]) => [k, v, true])
+  ];
+  document.getElementById('params-display').innerHTML = rows.map(([n, v, active]) =>
+    `<div class="param-row"><span class="param-name">${n}</span><span class="param-value ${active?'active':''}">${v}</span></div>`
+  ).join('');
+}
+
+// ─── Playback ───────────────────────────────────────────────────────────────
+function play() {
+  playing = true;
+  lastTimestamp = null;
+  frameAccum = 0;
+  document.getElementById('play-icon').innerHTML = '<rect x="6" y="4" width="4" height="16" fill="white"/><rect x="14" y="4" width="4" height="16" fill="white"/>';
+  raf = requestAnimationFrame(loop);
+}
+
+function pause() {
+  playing = false;
+  if (raf) cancelAnimationFrame(raf);
+  document.getElementById('play-icon').innerHTML = '<polygon points="5,3 19,12 5,21" fill="white"/>';
+}
+
+function loop(ts) {
+  if (!playing) return;
+  if (lastTimestamp === null) { lastTimestamp = ts; }
+  const delta = ts - lastTimestamp;
+  lastTimestamp = ts;
+  frameAccum += delta;
+  const frameDuration = 1000 / FPS;
+  while (frameAccum >= frameDuration) {
+    frameAccum -= frameDuration;
+    currentFrame = (currentFrame + 1) % TOTAL_FRAMES;
+  }
+  renderFrame(currentFrame);
+  raf = requestAnimationFrame(loop);
+}
+
+document.getElementById('btn-play').addEventListener('click', () => {
+  if (playing) pause(); else play();
+});
+
+// Scrub
+const bar = document.getElementById('progress-bar');
+let dragging = false;
+function scrubTo(e) {
+  const rect = bar.getBoundingClientRect();
+  const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+  const pct = Math.max(0, Math.min(1, x / rect.width));
+  currentFrame = Math.round(pct * (TOTAL_FRAMES - 1));
+  renderFrame(currentFrame);
+}
+bar.addEventListener('mousedown', e => { dragging = true; pause(); scrubTo(e); });
+bar.addEventListener('touchstart', e => { dragging = true; pause(); scrubTo(e); }, {passive:true});
+window.addEventListener('mousemove', e => { if (dragging) scrubTo(e); });
+window.addEventListener('touchmove', e => { if (dragging) scrubTo(e); }, {passive:true});
+window.addEventListener('mouseup', () => { dragging = false; });
+window.addEventListener('touchend', () => { dragging = false; });
+
+// ─── Scene switching ─────────────────────────────────────────────────────────
+const sceneNames = { cube: 'Rotating Cube', particle: 'Particle Field', wave: 'Wave Grid' };
+window.setScene = function(name) {
+  currentScene = name;
+  resize();
+  renderFrame(currentFrame);
+  document.getElementById('stat-scene').textContent = sceneNames[name];
+  document.getElementById('code-display').innerHTML = codeSnippets[name];
+  ['cube','particle','wave'].forEach(k => {
+    document.getElementById('btn-'+k).classList.toggle('active', k === name);
+  });
+};
+setScene('cube');
+
+// ─── Tabs ────────────────────────────────────────────────────────────────────
+window.showTab = function(name, el) {
+  document.querySelectorAll('.panel-body').forEach(p => p.style.display = 'none');
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).style.display = 'block';
+  el.classList.add('active');
+  if (name === 'params') updateParams(currentFrame);
+};
+
+// Initial render
+renderFrame(0);
+</script>
+</body>
+</html>

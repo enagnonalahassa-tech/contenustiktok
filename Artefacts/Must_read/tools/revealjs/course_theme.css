@@ -1,0 +1,112 @@
+/* Thème personnalisé Reveal.js - AI Automation Architect */
+
+:root {
+  --r-background-color: #0F172A; /* Fond sombre */
+  --r-main-font: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --r-heading-font: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --r-main-color: #F8FAFC;
+  --r-heading-color: #F8FAFC;
+  --r-heading-text-transform: none;
+  --brand-primary: #00D4FF;
+  --brand-accent: #7C3AED;
+}
+
+.reveal {
+  font-family: var(--r-main-font);
+  font-size: 26px;
+  color: var(--r-main-color);
+}
+
+.reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+  font-family: var(--r-heading-font);
+  text-transform: none;
+  font-weight: 700;
+}
+
+/* Titres H1 avec dégradé */
+.reveal h1 {
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 65px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+/* Soulignement stylisé pour les H2 */
+.reveal h2::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--brand-primary), var(--brand-accent));
+  border-radius: 2px;
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Cartes effet Glassmorphism */
+.reveal .card {
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05) inset;
+  padding: 18px 22px;
+  margin-top: 12px;
+  text-align: left;
+  font-size: 22px;
+  line-height: 1.5;
+}
+
+.reveal .accent { color: var(--brand-primary); font-weight: bold; }
+.reveal .danger { color: #F43F5E; font-weight: bold; }
+.reveal .warning { color: #FB923C; font-weight: bold; }
+
+/* Grilles pour Reveal (Flexbox simple) */
+.reveal .grid-2 {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  /* Limite la hauteur pour ne pas masquer le watermark */
+  max-height: 62vh;
+}
+.reveal .grid-2 > * {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* === Effet Typewriter (Slide Finale) === */
+@keyframes typing {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+@keyframes blink-caret {
+  50% { border-color: transparent; }
+}
+.reveal .typewriter {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 3px solid #00D4FF;
+  animation: typing 1.8s steps(14, end) forwards,
+             blink-caret 0.75s step-end infinite;
+}
+
+/* Watermark global de la formation */
+.reveal::after {
+  content: 'GENEREUX ALAHASSA • ARCHITECTE IA';
+  position: absolute;
+  bottom: 20px;
+  left: 30px;
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: rgba(148, 163, 184, 0.4);
+  font-weight: 500;
+  text-transform: uppercase;
+  z-index: 10;
+  pointer-events: none;
+}

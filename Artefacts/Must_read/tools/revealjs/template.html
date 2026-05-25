@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8">
+		<title>AI Automation Architect - Cours</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<!-- Fichiers de base Reveal.js depuis le CDN -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reset.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.css">
+		<!-- Thème de base que l'on va écraser -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/theme/black.min.css">
+        <!-- Coloration du code -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/plugin/highlight/monokai.min.css">
+        
+        <!-- Importation Google Fonts -->
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700;800&display=swap');
+        </style>
+
+        <!-- Thème personnalisé (Injecté) -->
+        <style>
+            {{CUSTOM_CSS}}
+        </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+                <!-- Section qui indique à Reveal d'utiliser Markdown -->
+                <!-- --- = Nouveau Slide horizontal, -- = Nouveau Slide vertical -->
+				<section data-markdown data-separator="^\n---\n" data-separator-vertical="^\n--\n">
+					<textarea data-template>
+{{MARKDOWN_CONTENT}}
+					</textarea>
+				</section>
+			</div>
+		</div>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/plugin/markdown/markdown.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/plugin/highlight/highlight.min.js"></script>
+		<script>
+			// Initialisation de Reveal
+			Reveal.initialize({
+				hash: true,
+                transition: 'slide', // Options: none/fade/slide/convex/concave/zoom
+                backgroundTransition: 'fade',
+				plugins: [ RevealMarkdown, RevealHighlight ]
+			});
+		</script>
+	</body>
+</html>
