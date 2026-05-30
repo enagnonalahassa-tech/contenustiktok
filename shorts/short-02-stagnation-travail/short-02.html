@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Short 02 — Pourquoi tu stagnes au travail</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --acc1: #F43F5E;
+      --acc2: #C084FC;
+      --acc3: #FBBF24;
+      --bg:   #0D0514;
+    }
+
+    body {
+      background: #030008;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* ── Écran API Key ElevenLabs ── */
+    #api-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+    }
+    #api-overlay .box {
+      background: #1A0A2E;
+      border-radius: 24px;
+      border: 1px solid rgba(244,63,94,0.28);
+      padding: 2.5rem 2rem;
+      max-width: 340px; width: 90%;
+      text-align: center;
+    }
+    #api-overlay p.icon { font-size: 2.4rem; margin-bottom: 0.8rem; }
+    #api-overlay h2 { color: #FDF4FF; font-size: 1.2rem; margin-bottom: 0.4rem; }
+    #api-overlay p.sub { color: rgba(253,244,255,0.52); font-size: 0.88rem; margin-bottom: 1.4rem; line-height: 1.5; }
+    #el-key {
+      width: 100%; padding: 0.8rem 1rem; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.14); background: #0D0514;
+      color: #FDF4FF; font-size: 1rem; margin-bottom: 0.9rem;
+      font-family: 'Inter', sans-serif;
+    }
+    #el-key::placeholder { color: rgba(255,255,255,0.25); }
+    .btn-primary {
+      width: 100%; padding: 0.88rem; border-radius: 12px; border: none;
+      cursor: pointer; font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem;
+      background: linear-gradient(135deg, var(--acc1), var(--acc2));
+      color: white; font-family: 'Inter', sans-serif;
+    }
+    .btn-skip {
+      background: none; border: none; cursor: pointer;
+      color: rgba(255,255,255,0.32); font-size: 0.84rem;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* ── Cadre 9:16 ── */
+    .phone {
+      position: relative;
+      aspect-ratio: 9/16;
+      height: 94vh;
+      max-height: 800px;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.05),
+        0 50px 120px rgba(0,0,0,0.92),
+        0 0 80px rgba(196,116,252,0.08);
+    }
+
+    /* ── Indicateur voix ── */
+    #vi {
+      position: absolute; top: 1.2rem; right: 1.2rem; z-index: 30;
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: rgba(244,63,94,0.15);
+      border: 1px solid rgba(244,63,94,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    #vi.on { background: rgba(244,63,94,0.35); box-shadow: 0 0 14px rgba(244,63,94,0.5); }
+
+    /* ── Scènes ── */
+    .scene {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      padding: 3rem 1.6rem 5rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.55s cubic-bezier(0.4,0,0.2,1);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    .scene.active { opacity: 1; pointer-events: auto; }
+
+    /* Overlay texte — renforcé pour images IA */
+    .scene::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom,
+        rgba(13,5,20,0.72) 0%,
+        rgba(13,5,20,0.20) 30%,
+        rgba(13,5,20,0.18) 65%,
+        rgba(13,5,20,0.80) 100%
+      );
+      z-index: 0;
+    }
+
+    /* Fallback CSS si pas d'images IA */
+    #sc1 { background: radial-gradient(ellipse at 30% 25%, #1a0530 0%, #0D0514 55%, #06010f 100%); }
+    #sc2 { background: radial-gradient(ellipse at 70% 65%, #1f050e 0%, #0D0514 55%, #06010f 100%); }
+    #sc3 { background: radial-gradient(ellipse at 50% 20%, #080e24 0%, #0D0514 55%, #06010f 100%); }
+    #sc4 { background: radial-gradient(ellipse at 30% 70%, #0a0820 0%, #0D0514 55%, #06010f 100%); }
+    #sc5 { background: radial-gradient(ellipse at 55% 50%, #180520 0%, #0D0514 55%, #06010f 100%); }
+
+    /* Images IA (décommenter quand les images sont prêtes) */
+    /* #sc1 { background-image: url('assets/images/sc1-hook.jpg'); } */
+    /* #sc2 { background-image: url('assets/images/sc2-probleme.jpg'); } */
+    /* #sc3 { background-image: url('assets/images/sc3-solution.jpg'); } */
+    /* #sc4 { background-image: url('assets/images/sc4-application.jpg'); } */
+    /* #sc5 { background-image: url('assets/images/sc5-cta.jpg'); } */
+
+    /* Grain satiné */
+    .scene::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.026'/%3E%3C/svg%3E");
+      background-size: 180px;
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── Contenu ── */
+    .content {
+      position: relative; z-index: 2;
+      width: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center;
+      gap: 1.4rem;
+    }
+
+    .label {
+      font-size: 0.56rem; font-weight: 700;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: rgba(196,116,252,0.6);
+    }
+    .label-red  { color: rgba(244,63,94,0.65); }
+    .label-gold { color: rgba(251,191,36,0.65); }
+
+    .title {
+      font-size: clamp(1.9rem, 6vh, 3.1rem);
+      font-weight: 900; line-height: 1.12;
+      color: #FDF4FF; letter-spacing: -0.025em;
+    }
+    .title.mid   { font-size: clamp(1.45rem, 4.6vh, 2.3rem); }
+    .title.small { font-size: clamp(1.1rem, 3.6vh, 1.8rem); }
+
+    .acc1 { color: var(--acc1); }
+    .acc2 { color: var(--acc2); }
+    .acc3 { color: var(--acc3); }
+
+    .sep {
+      width: 42px; height: 3px;
+      border-radius: 2px;
+      background: var(--acc2);
+    }
+    .sep.red  { background: var(--acc1); }
+    .sep.gold { background: var(--acc3); }
+
+    /* ── Stat (scène 2) ── */
+    .stat {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 0.2rem;
+      padding: 1rem 2rem;
+      border: 1.5px solid rgba(244,63,94,0.35);
+      border-radius: 18px;
+      background: rgba(244,63,94,0.08);
+    }
+    .stat-num {
+      font-size: clamp(2.9rem, 8.5vh, 4.3rem);
+      font-weight: 900; line-height: 1;
+      color: var(--acc1);
+    }
+    .stat-desc {
+      font-size: clamp(0.66rem, 1.9vh, 0.86rem);
+      font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(253,244,255,0.52);
+    }
+    @keyframes count-up {
+      from { opacity: 0; transform: scale(0.7); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .stat.pop { animation: count-up 0.5s cubic-bezier(0.16,1,0.3,1) forwards; }
+
+    /* ── Barre exécution / pilotage (scène 2) ── */
+    .exec-bar-wrap {
+      width: 100%; max-width: 280px;
+      display: flex; flex-direction: column; gap: 0.5rem;
+    }
+    .exec-labels {
+      display: flex; justify-content: space-between;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+      color: rgba(253,244,255,0.5);
+    }
+    .exec-labels .left  { color: var(--acc1); }
+    .exec-labels .right { color: var(--acc2); }
+    .exec-track {
+      width: 100%; height: 10px; border-radius: 99px;
+      background: rgba(255,255,255,0.08); overflow: hidden;
+    }
+    .exec-fill {
+      height: 100%; width: 80%; border-radius: 99px;
+      background: linear-gradient(90deg, var(--acc1) 0%, rgba(196,116,252,0.4) 100%);
+    }
+
+    /* ── Items séquentiels ── */
+    .items { width: 100%; display: flex; flex-direction: column; gap: 0.65rem; }
+    .item {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.82rem 1rem; border-radius: 14px;
+      background: rgba(196,116,252,0.07);
+      border: 1px solid rgba(196,116,252,0.18);
+      font-size: clamp(0.86rem, 2.6vh, 1.1rem);
+      font-weight: 700; color: #FDF4FF;
+      opacity: 0; transform: translateY(14px);
+      transition: opacity 0.42s ease, transform 0.42s ease;
+    }
+    .item.gold-item {
+      background: rgba(251,191,36,0.07);
+      border-color: rgba(251,191,36,0.2);
+    }
+    .item.shown { opacity: 1; transform: translateY(0); }
+    .item-icon { font-size: 1.2em; flex-shrink: 0; }
+
+    /* ── CTA (scène 5) ── */
+    .cta {
+      padding: 1rem 2rem;
+      background: var(--acc1);
+      border-radius: 50px;
+      font-size: clamp(0.95rem, 2.8vh, 1.25rem);
+      font-weight: 900; color: #FFF0F2;
+      letter-spacing: 0.03em;
+      box-shadow: 0 0 40px rgba(244,63,94,0.38);
+    }
+    .sub-cta {
+      font-size: clamp(0.72rem, 2vh, 0.88rem);
+      font-weight: 600; color: rgba(253,244,255,0.48);
+    }
+
+    /* ── Live typing ── */
+    .cursor {
+      display: inline-block; width: 3px; height: 0.85em;
+      background: var(--acc1); margin-left: 2px;
+      vertical-align: middle; border-radius: 1px;
+      animation: blink 0.85s step-end infinite;
+    }
+    .cursor.lav { background: var(--acc2); }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ── Grille (scène 3) ── */
+    .grid-bg {
+      position: absolute; inset: 0; z-index: 1;
+      background-image:
+        linear-gradient(rgba(192,132,252,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(192,132,252,0.05) 1px, transparent 1px);
+      background-size: 38px 38px;
+      animation: grid-drift 14s linear infinite;
+    }
+    @keyframes grid-drift {
+      from { background-position: 0 0; }
+      to   { background-position: 38px 38px; }
+    }
+
+    /* ── Particules ── */
+    .particle {
+      position: absolute; border-radius: 50%;
+      pointer-events: none; z-index: 1;
+      animation: rise linear infinite;
+    }
+    @keyframes rise {
+      0%   { transform: translateY(0) translateX(0); opacity: 0; }
+      8%   { opacity: 1; }
+      92%  { opacity: 0.6; }
+      100% { transform: translateY(-95vh) translateX(var(--dx)); opacity: 0; }
+    }
+
+    /* ── Navigation ── */
+    .dots {
+      position: absolute; bottom: 1.4rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 6px; z-index: 20;
+    }
+    .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.13);
+      transition: all 0.3s ease;
+    }
+    .dot.active {
+      width: 24px; border-radius: 3px;
+      background: var(--acc2);
+      box-shadow: 0 0 12px rgba(196,116,252,0.65);
+    }
+
+    .hint {
+      position: absolute; bottom: 3.8rem; left: 0; right: 0;
+      text-align: center; font-size: 0.52rem;
+      letter-spacing: 0.14em; color: rgba(255,255,255,0.15);
+      z-index: 20; transition: opacity 1.5s ease;
+    }
+    .hint.gone { opacity: 0; pointer-events: none; }
+  </style>
+</head>
+<body>
+
+<!-- ── Écran API Key ElevenLabs ── -->
+<div id="api-overlay">
+  <div class="box">
+    <p class="icon">🎙️</p>
+    <h2>Voix IA professionnelle</h2>
+    <p class="sub">Entre ta clé ElevenLabs pour activer la voix Charlotte (élégante, posée)</p>
+    <input id="el-key" type="password" placeholder="sk-..."/>
+    <button class="btn-primary" onclick="saveKey()">Activer la voix →</button>
+    <button class="btn-skip" onclick="skipKey()">Continuer sans voix</button>
+  </div>
+</div>
+
+<div class="phone" id="phone">
+
+  <div id="vi" onclick="toggleMute()" title="Mute / Unmute">🔊</div>
+
+  <!-- ══════════════════════════════
+       SCÈNE 1 — HOOK
+  ══════════════════════════════ -->
+  <div class="scene active" id="sc1">
+    <div class="content">
+      <span class="label">01 — Vérité inconfortable</span>
+
+      <h1 class="title">
+        Tu stagnes au travail.
+      </h1>
+      <h1 class="title mid" style="color:rgba(253,244,255,0.65); font-weight:600;">
+        Pas parce que tu manques de
+      </h1>
+      <h1 class="title" style="font-size: clamp(2.3rem,7vh,3.6rem);">
+        <span class="acc1" id="t-mot"></span>
+      </h1>
+
+      <div class="sep red"></div>
+
+      <h1 class="title mid" style="color:rgba(253,244,255,0.65); font-weight:600;">
+        Mais parce que tu n'as jamais<br>appris à
+      </h1>
+      <h1 class="title" style="font-size: clamp(2.3rem,7vh,3.6rem);">
+        <span class="acc2" id="t-pil"></span>
+      </h1>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       SCÈNE 2 — LE PROBLÈME
+  ══════════════════════════════ -->
+  <div class="scene" id="sc2">
+    <div class="content">
+      <span class="label label-red">02 — Le vrai problème</span>
+
+      <div class="stat" id="stat-block">
+        <div class="stat-num">80%</div>
+        <div class="stat-desc">des cadres prisonniers de l'exécution</div>
+      </div>
+
+      <h2 class="title mid">
+        Tu fais. Tu fais. Tu fais.<br>
+        Mais tu ne <span class="acc1">pilotes</span> jamais.
+      </h2>
+
+      <div class="exec-bar-wrap">
+        <div class="exec-labels">
+          <span class="left">EXÉCUTION</span>
+          <span class="right">PILOTAGE</span>
+        </div>
+        <div class="exec-track">
+          <div class="exec-fill"></div>
+        </div>
+      </div>
+
+      <p class="title small" style="color:rgba(253,244,255,0.5); font-weight:600;">
+        Tu cours. Mais vers où ?
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       SCÈNE 3 — LA SOLUTION
+  ══════════════════════════════ -->
+  <div class="scene" id="sc3">
+    <div class="grid-bg"></div>
+    <div class="content">
+      <span class="label">03 — La solution</span>
+
+      <h2 class="title mid">
+        <span class="acc2">Piloter</span>, c'est prendre du recul<br>
+        chaque semaine pour<br>
+        décider où aller.
+      </h2>
+
+      <div class="sep"></div>
+
+      <div class="items" id="items-sc3">
+        <div class="item" data-delay="0">
+          <span class="item-icon">🧭</span>
+          <span>Identifier tes vrais leviers d'impact</span>
+        </div>
+        <div class="item" data-delay="380">
+          <span class="item-icon">🗑️</span>
+          <span>Déléguer ce qui ne te fait pas avancer</span>
+        </div>
+        <div class="item" data-delay="760">
+          <span class="item-icon">🎯</span>
+          <span>Poser <span class="acc2">3 priorités</span> claires par semaine</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       SCÈNE 4 — APPLICATION
+  ══════════════════════════════ -->
+  <div class="scene" id="sc4">
+    <div class="content">
+      <span class="label label-gold">04 — En pratique</span>
+
+      <h2 class="title">
+        <span class="acc3">1h / semaine</span><br>suffit.
+      </h2>
+
+      <div class="sep gold"></div>
+
+      <div class="items" id="items-sc4">
+        <div class="item gold-item" data-delay="0">
+          <span class="item-icon">📋</span>
+          <span>Revue de semaine <span class="acc3">(30 min)</span></span>
+        </div>
+        <div class="item gold-item" data-delay="300">
+          <span class="item-icon">🎯</span>
+          <span>3 priorités <span class="acc3">non-négociables</span></span>
+        </div>
+        <div class="item gold-item" data-delay="600">
+          <span class="item-icon">🚫</span>
+          <span>1 chose à <span class="acc1">arrêter</span> de faire</span>
+        </div>
+        <div class="item gold-item" data-delay="900">
+          <span class="item-icon">📈</span>
+          <span>1 levier d'impact à <span class="acc3">activer</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       SCÈNE 5 — CTA
+  ══════════════════════════════ -->
+  <div class="scene" id="sc5">
+    <div class="content">
+      <span class="label">05 — À toi de jouer</span>
+
+      <h2 class="title">
+        Sur quoi tu veux<br>
+        gagner en <span class="acc2">clarté</span><br>
+        cette semaine ?
+      </h2>
+
+      <div class="cta">Commente <strong>PILOTE</strong> 👇</div>
+
+      <p class="sub-cta">Je te donne la 1ère étape</p>
+    </div>
+  </div>
+
+  <!-- Chrome -->
+  <div class="hint" id="hint">← CLIC ou → pour naviguer</div>
+  <div class="dots">
+    <div class="dot active" id="d0"></div>
+    <div class="dot" id="d1"></div>
+    <div class="dot" id="d2"></div>
+    <div class="dot" id="d3"></div>
+    <div class="dot" id="d4"></div>
+  </div>
+</div>
+
+<script>
+  /* ── ElevenLabs ── */
+  let EL_KEY  = localStorage.getItem('el_key') || '';
+  const EL_VID = 'XB0fDUnXU5powFXDhCwa'; // Charlotte
+  const SPEECH = [
+    "Tu stagnes au travail. Pas parce que tu manques de talent. Mais parce que tu n'as jamais appris à piloter.",
+    "80% des cadres sont coincés dans l'exécution. Tu t'agites. Tu t'épuises. Mais tu ne prends jamais le recul pour décider où tu vas vraiment.",
+    "Piloter, c'est apprendre à regarder ton travail d'en haut. Identifier tes vrais leviers. Déléguer ce qui t'épuise sans t'apporter de valeur. Et poser 3 priorités non-négociables chaque semaine.",
+    "Tu n'as pas besoin de plus de temps. 1 heure par semaine : tu reviews ta semaine, tu poses tes 3 priorités, tu identifies une chose à arrêter, et tu actives un levier d'impact. C'est ça, piloter.",
+    "Dis-moi en commentaire sur quoi tu veux gagner en clarté cette semaine. Commente PILOTE. Je te réponds avec la première étape."
+  ];
+  let curAudio = null, muted = false;
+
+  function saveKey() {
+    EL_KEY = document.getElementById('el-key').value.trim();
+    if (EL_KEY) localStorage.setItem('el_key', EL_KEY);
+    document.getElementById('api-overlay').style.display = 'none';
+    goTo(0);
+  }
+  function skipKey() {
+    document.getElementById('api-overlay').style.display = 'none';
+    goTo(0);
+  }
+  if (EL_KEY) document.getElementById('api-overlay').style.display = 'none';
+
+  function toggleMute() {
+    muted = !muted;
+    document.getElementById('vi').textContent = muted ? '🔇' : '🔊';
+    if (muted) { curAudio?.pause(); }
+  }
+
+  async function speakEL(text) {
+    if (!EL_KEY || muted) return;
+    curAudio?.pause();
+    try {
+      const res = await fetch(
+        `https://api.elevenlabs.io/v1/text-to-speech/${EL_VID}/stream`, {
+        method: 'POST',
+        headers: {
+          'xi-api-key': EL_KEY,
+          'Content-Type': 'application/json',
+          'Accept': 'audio/mpeg'
+        },
+        body: JSON.stringify({
+          text,
+          model_id: 'eleven_multilingual_v2',
+          voice_settings: { stability: 0.60, similarity_boost: 0.78, style: 0.10, use_speaker_boost: true }
+        })
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const blob = await res.blob();
+      curAudio = new Audio(URL.createObjectURL(blob));
+      const vi = document.getElementById('vi');
+      curAudio.onplay  = () => vi.classList.add('on');
+      curAudio.onended = () => vi.classList.remove('on');
+      curAudio.onerror = () => vi.classList.remove('on');
+      await curAudio.play();
+    } catch(err) {
+      console.warn('[ElevenLabs]', err);
+    }
+  }
+
+  /* ── Particules ── */
+  function addParticles(sceneId, n, color) {
+    const sc = document.getElementById(sceneId);
+    for (let i = 0; i < n; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const s = Math.random() * 3 + 1.5;
+      p.style.cssText = [
+        `width:${s}px`, `height:${s}px`,
+        `background:${color}`,
+        `left:${Math.random() * 100}%`,
+        `bottom:${-s}px`,
+        `--dx:${(Math.random() - 0.5) * 50}px`,
+        `animation-duration:${5 + Math.random() * 7}s`,
+        `animation-delay:${Math.random() * 8}s`,
+        `opacity:0`
+      ].join(';');
+      sc.appendChild(p);
+    }
+  }
+  addParticles('sc1', 20, 'rgba(244,63,94,0.6)');
+  addParticles('sc2', 16, 'rgba(244,63,94,0.5)');
+  addParticles('sc3', 14, 'rgba(196,116,252,0.55)');
+  addParticles('sc4', 18, 'rgba(251,191,36,0.55)');
+  addParticles('sc5', 22, 'rgba(244,63,94,0.65)');
+
+  /* ── Live typing ── */
+  function typeText(el, text, speed, cursorClass, cb) {
+    if (!el) { cb && cb(); return; }
+    el.innerHTML = '';
+    let i = 0;
+    const cur = document.createElement('span');
+    cur.className = 'cursor ' + (cursorClass || '');
+    el.appendChild(cur);
+    const iv = setInterval(() => {
+      cur.before(text[i++]);
+      if (i >= text.length) {
+        clearInterval(iv);
+        setTimeout(() => cur.remove(), 900);
+        cb && cb();
+      }
+    }, speed);
+  }
+
+  /* ── Items séquentiels ── */
+  function showItems(id) {
+    document.querySelectorAll(`#${id} .item`).forEach(el => {
+      setTimeout(() => el.classList.add('shown'), +el.dataset.delay + 250);
+    });
+  }
+  function hideItems(id) {
+    document.querySelectorAll(`#${id} .item`).forEach(el => el.classList.remove('shown'));
+  }
+
+  /* ── Navigation ── */
+  const SCENES = ['sc1','sc2','sc3','sc4','sc5'];
+  const DOTS   = ['d0','d1','d2','d3','d4'];
+  let current  = 0;
+
+  function goTo(idx) {
+    idx = ((idx % SCENES.length) + SCENES.length) % SCENES.length;
+
+    document.getElementById(SCENES[current]).classList.remove('active');
+    hideItems(SCENES[current]);
+
+    current = idx;
+    const sc = document.getElementById(SCENES[current]);
+    sc.classList.add('active');
+
+    DOTS.forEach((id, i) =>
+      document.getElementById(id).classList.toggle('active', i === current)
+    );
+
+    // Voix
+    speakEL(SPEECH[current]);
+
+    // Scène 1 — live typing
+    if (current === 0) {
+      const mot = document.getElementById('t-mot');
+      const pil = document.getElementById('t-pil');
+      mot.textContent = ''; pil.textContent = '';
+      setTimeout(() =>
+        typeText(mot, 'TALENT', 70, '', () =>
+          setTimeout(() => typeText(pil, 'PILOTER', 70, 'lav'), 500)
+        ), 350);
+    }
+
+    // Scène 2 — pop-in stat
+    if (current === 1) {
+      const sb = document.getElementById('stat-block');
+      sb.classList.remove('pop');
+      void sb.offsetWidth;
+      sb.classList.add('pop');
+    }
+
+    if (current === 2) showItems('sc3');
+    if (current === 3) showItems('sc4');
+  }
+
+  document.getElementById('phone').addEventListener('click', () => goTo(current + 1));
+  document.addEventListener('keydown', e => {
+    if (['ArrowRight',' ','Enter'].includes(e.key)) { e.preventDefault(); goTo(current + 1); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(current - 1); }
+  });
+
+  // Ne pas lancer goTo(0) ici — géré par saveKey/skipKey ou si clé déjà dispo
+  if (EL_KEY) goTo(0);
+  setTimeout(() => document.getElementById('hint').classList.add('gone'), 5000);
+</script>
+
+</body>
+</html>

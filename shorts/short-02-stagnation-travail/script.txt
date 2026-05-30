@@ -1,0 +1,82 @@
+Short 02 — "La vraie raison pour laquelle tu stagnes au travail"
+Format : 9:16 · ~43s · Faceless · Voix ElevenLabs Charlotte
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SCÈNE 1 — HOOK (0-4s)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Texte écran :
+  Tu stagnes au travail.
+  Pas parce que tu manques de [TALENT]
+  Mais parce que tu n'as jamais appris à [PILOTER]
+
+Voix-off :
+  "Tu stagnes au travail. Pas parce que tu manques de talent.
+   Mais parce que tu n'as jamais appris à piloter."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SCÈNE 2 — LE PROBLÈME (4-13s)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Texte écran :
+  [80%] des cadres restent prisonniers de l'exécution
+  Tu fais. Tu fais. Tu fais.
+  Mais tu ne pilotes jamais.
+  EXÉCUTION ████████░░ PILOTAGE
+
+Voix-off :
+  "80% des cadres sont coincés dans l'exécution. Tu t'agites.
+   Tu t'épuises. Mais tu ne prends jamais le recul pour décider
+   où tu vas vraiment."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SCÈNE 3 — LA SOLUTION (13-26s)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Texte écran :
+  Piloter, c'est prendre du recul chaque semaine
+  pour décider où aller.
+  🧭 Identifier tes vrais leviers d'impact
+  🗑️ Déléguer ce qui ne te fait pas avancer
+  🎯 Poser 3 priorités claires par semaine
+
+Voix-off :
+  "Piloter, c'est apprendre à regarder ton travail d'en haut.
+   Identifier tes vrais leviers. Déléguer ce qui t'épuise
+   sans t'apporter de valeur. Et poser 3 priorités
+   non-négociables chaque semaine."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SCÈNE 4 — APPLICATION (26-37s)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Texte écran :
+  1h par semaine suffit :
+  📋 Revue de semaine (30 min)
+  🎯 3 priorités non-négociables
+  🚫 1 chose à arrêter de faire
+  📈 1 levier d'impact à activer
+
+Voix-off :
+  "Tu n'as pas besoin de plus de temps.
+   1 heure par semaine : tu reviews ta semaine,
+   tu poses tes 3 priorités, tu identifies une chose à arrêter,
+   et tu actives un levier d'impact. C'est ça, piloter."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SCÈNE 5 — CTA (37-43s)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Texte écran :
+  Sur quoi tu veux gagner en clarté
+  cette semaine ?
+  [Commente PILOTE 👇]
+  Je te donne la 1ère étape
+
+Voix-off :
+  "Dis-moi en commentaire sur quoi tu veux gagner
+   en clarté cette semaine. Commente PILOTE.
+   Je te réponds avec la première étape."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+INSTRUCTIONS PRODUCTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Voix      : ElevenLabs — Charlotte (XB0fDUnXU5powFXDhCwa) · stability 0.60 · similarity 0.78
+Musique   : "Minimal Corporate" ou "Elegant Ambient" · 15% volume
+Résolution: 1080 × 1920px · 25fps
+Export    : Kap → WebM ou MP4 H264

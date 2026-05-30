@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Short 04 — Le levier bat le hustle</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0D0514;
+      --bg2:      #1A0A2E;
+      --bg-rgb:   13,5,20;
+      --acc1:     #FBBF24;   /* or champagne — finance */
+      --acc1-rgb: 251,191,36;
+      --acc2:     #C084FC;   /* lavande */
+      --acc2-rgb: 192,132,252;
+      --acc3:     #F43F5E;   /* rose électrique */
+      --acc3-rgb: 244,63,94;
+      --text:     #FDF4FF;
+      --muted:    rgba(253,244,255,0.50);
+    }
+
+    body {
+      background: #030008;
+      min-height: 100vh;
+      display: flex; justify-content: center; align-items: center;
+      font-family: 'Inter', sans-serif;
+      overflow: hidden; user-select: none;
+    }
+
+    /* ── Cadre 9:16 ── */
+    .phone {
+      position: relative;
+      aspect-ratio: 9/16; height: 94vh; max-height: 800px;
+      border-radius: 28px; overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.05),
+        0 50px 120px rgba(0,0,0,0.92),
+        0 0 100px rgba(251,191,36,0.08);
+    }
+
+    /* ── Scènes ── */
+    .scene {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      padding: 3rem 1.6rem 5rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1);
+      overflow: hidden;
+    }
+    .scene.active { opacity: 1; pointer-events: auto; }
+
+    #sc1 { background: radial-gradient(ellipse at 50% 30%, #1a0d00 0%, #0D0514 55%, #060005 100%); }
+    #sc2 { background: radial-gradient(ellipse at 60% 65%, #1a0508 0%, #0D0514 55%, #060005 100%); }
+    #sc3 { background: radial-gradient(ellipse at 40% 25%, #08061a 0%, #0D0514 55%, #040012 100%); }
+    #sc4 { background: radial-gradient(ellipse at 30% 60%, #0c0a00 0%, #0D0514 55%, #060008 100%); }
+    #sc5 { background: radial-gradient(ellipse at 55% 50%, #140a00 0%, #0D0514 50%, #060005 100%); }
+
+    /* Overlay */
+    .scene::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to bottom,
+        rgba(13,5,20,0.60) 0%,
+        rgba(13,5,20,0.08) 25%,
+        rgba(13,5,20,0.08) 65%,
+        rgba(13,5,20,0.75) 100%);
+      z-index: 1; pointer-events: none;
+    }
+
+    /* Grain */
+    .scene::after {
+      content: ''; position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.020'/%3E%3C/svg%3E");
+      background-size: 180px; pointer-events: none; z-index: 2;
+    }
+
+    .bg-anim { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+
+    /* ── Contenu ── */
+    .content {
+      position: relative; z-index: 10; width: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center; gap: 1.25rem;
+    }
+
+    /* ── Typographie ── */
+    .label {
+      font-size: 0.56rem; font-weight: 700;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: rgba(251,191,36,0.65);
+    }
+    .label.l2 { color: rgba(192,132,252,0.62); }
+    .label.l3 { color: rgba(244,63,94,0.65); }
+
+    .title {
+      font-size: clamp(1.85rem,5.6vh,2.9rem);
+      font-weight: 900; line-height: 1.12; color: var(--text);
+      letter-spacing: -0.025em;
+      text-shadow: 0 2px 24px rgba(0,0,0,0.95), 0 0 60px rgba(0,0,0,0.55);
+    }
+    .title.big   { font-size: clamp(2.1rem,6.8vh,3.5rem); }
+    .title.mid   { font-size: clamp(1.35rem,4.2vh,2.15rem); }
+    .title.small { font-size: clamp(1.05rem,3.2vh,1.65rem); }
+
+    .kw1 { color: var(--acc1); text-shadow: 0 0 30px rgba(251,191,36,0.75); }
+    .kw2 { color: var(--acc2); text-shadow: 0 0 28px rgba(192,132,252,0.7); }
+    .kw3 { color: var(--acc3); text-shadow: 0 0 28px rgba(244,63,94,0.65); }
+
+    .title-block {
+      padding: 1rem 1.3rem; border-radius: 18px;
+      background: rgba(13,5,20,0.50);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(251,191,36,0.14); width: 100%;
+    }
+    .title-block.b2 { border-color: rgba(192,132,252,0.16); }
+    .title-block.b3 { border-color: rgba(244,63,94,0.14); }
+    .title-block.naked { background: transparent; backdrop-filter: none; border: none; padding: 0; }
+
+    .sep {
+      width: 44px; height: 3px; border-radius: 2px;
+      background: var(--acc1); box-shadow: 0 0 18px rgba(251,191,36,0.7);
+    }
+    .sep.s2 { background: var(--acc2); box-shadow: 0 0 16px rgba(192,132,252,0.65); }
+    .sep.s3 { background: var(--acc3); box-shadow: 0 0 16px rgba(244,63,94,0.6); }
+
+    /* ── Stat ── */
+    .stat {
+      display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
+      padding: 1rem 2.2rem; border-radius: 18px;
+      border: 1.5px solid rgba(251,191,36,0.4);
+      background: rgba(13,5,20,0.55);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    }
+    .stat-num {
+      font-size: clamp(2.9rem,9vh,4.5rem); font-weight: 900; line-height: 1;
+      color: var(--acc1); text-shadow: 0 0 55px rgba(251,191,36,0.7);
+    }
+    .stat-desc {
+      font-size: clamp(0.63rem,1.9vh,0.83rem); font-weight: 600;
+      color: rgba(253,244,255,0.52); text-transform: uppercase; letter-spacing: 0.11em;
+    }
+    @keyframes pop-in {
+      from { opacity:0; transform: scale(0.6) translateY(12px); }
+      to   { opacity:1; transform: scale(1) translateY(0); }
+    }
+    .stat.pop { animation: pop-in 0.55s cubic-bezier(0.16,1,0.3,1) forwards; }
+
+    /* ── Items liste ── */
+    .items { width: 100%; display: flex; flex-direction: column; gap: 0.6rem; }
+    .item {
+      display: flex; align-items: center; gap: 0.78rem;
+      padding: 0.82rem 1rem; border-radius: 14px;
+      background: rgba(13,5,20,0.52);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(192,132,252,0.2);
+      font-size: clamp(0.83rem,2.45vh,1.08rem); font-weight: 700; color: var(--text);
+      text-shadow: 0 1px 8px rgba(0,0,0,0.75);
+      opacity: 0; transform: translateX(-18px);
+      transition: opacity 0.42s ease, transform 0.42s ease;
+    }
+    .item.i1 { border-color: rgba(251,191,36,0.22); }
+    .item.shown { opacity:1; transform: translateX(0); }
+    .item-icon { font-size: 1.25em; flex-shrink: 0; }
+
+    /* ── CTA ── */
+    .cta {
+      padding: 1rem 2rem; border: none; cursor: pointer;
+      background: linear-gradient(135deg, var(--acc1) 0%, var(--acc3) 100%);
+      border-radius: 50px;
+      font-size: clamp(1rem,3vh,1.3rem); font-weight: 900;
+      color: #1a0800; font-family: 'Inter', sans-serif;
+      letter-spacing: 0.02em;
+      box-shadow: 0 0 55px rgba(251,191,36,0.5), 0 8px 28px rgba(0,0,0,0.45);
+      animation: cta-glow 2.6s ease-in-out infinite;
+    }
+    @keyframes cta-glow {
+      0%,100% { box-shadow: 0 0 55px rgba(251,191,36,0.5), 0 8px 28px rgba(0,0,0,0.45); }
+      50%      { box-shadow: 0 0 90px rgba(251,191,36,0.72), 0 8px 28px rgba(0,0,0,0.45); }
+    }
+    .sub-cta {
+      font-size: clamp(0.72rem,2.1vh,0.88rem); font-weight: 600;
+      color: rgba(253,244,255,0.48);
+      text-shadow: 0 1px 8px rgba(0,0,0,0.65);
+    }
+
+    /* ── Live Typing ── */
+    .cursor {
+      display: inline-block; width: 3px; height: 0.85em;
+      background: var(--acc1); margin-left: 2px;
+      vertical-align: middle; border-radius: 1px;
+      animation: blink 0.85s step-end infinite;
+    }
+    .cursor.c2 { background: var(--acc2); }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ── Dots ── */
+    .dots {
+      position: absolute; bottom: 1.5rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 6px; z-index: 20;
+    }
+    .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.16);
+      transition: all 0.32s ease;
+    }
+    .dot.active {
+      width: 26px; border-radius: 3px;
+      background: linear-gradient(90deg, var(--acc1), var(--acc2));
+      box-shadow: 0 0 14px rgba(251,191,36,0.7);
+    }
+
+    /* ── Bouton voix / indicateur ── */
+    .voice-btn {
+      position: absolute; top: 1.2rem; right: 1.2rem; z-index: 30;
+      width: 34px; height: 34px; border-radius: 50%; border: none; cursor: pointer;
+      background: rgba(13,5,20,0.65); backdrop-filter: blur(12px);
+      border: 1px solid rgba(251,191,36,0.28);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95rem; transition: all 0.2s;
+    }
+    .voice-btn:hover { transform: scale(1.1); }
+    .voice-btn.muted { opacity: 0.4; }
+
+    .vi {
+      position: absolute; top: 1.2rem; left: 1.2rem; z-index: 30;
+      display: flex; align-items: center; gap: 3px;
+      padding: 4px 10px; border-radius: 20px;
+      background: rgba(13,5,20,0.65); backdrop-filter: blur(12px);
+      border: 1px solid rgba(251,191,36,0.22);
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .vi.on { opacity: 1; }
+    .vb { width: 3px; border-radius: 2px; background: var(--acc1);
+          animation: vw 0.6s ease-in-out infinite alternate; }
+    .vb:nth-child(1){height:8px;  animation-delay:0s}
+    .vb:nth-child(2){height:14px; animation-delay:.1s}
+    .vb:nth-child(3){height:10px; animation-delay:.2s}
+    .vb:nth-child(4){height:16px; animation-delay:.05s}
+    .vb:nth-child(5){height:8px;  animation-delay:.15s}
+    @keyframes vw {
+      from { transform: scaleY(0.4); opacity: 0.6; }
+      to   { transform: scaleY(1);   opacity: 1; }
+    }
+
+    .hint {
+      position: absolute; bottom: 3.8rem; left: 0; right: 0;
+      text-align: center; font-size: 0.52rem; letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.16); z-index: 20; transition: opacity 1.5s ease;
+    }
+    .hint.gone { opacity: 0; pointer-events: none; }
+
+    /* ════════════════════════════════════
+       SC1 — COSMOS / GALAXIE DORÉE
+    ════════════════════════════════════ */
+    @keyframes rise {
+      0%   { transform: translateY(0) translateX(0); opacity: 0; }
+      8%   { opacity: 1; }
+      92%  { opacity: 0.65; }
+      100% { transform: translateY(-100vh) translateX(var(--dx)); opacity: 0; }
+    }
+    @keyframes halo-breathe {
+      0%,100% { transform: translate(-50%,-50%) scale(1);    opacity: 0.55; }
+      50%      { transform: translate(-50%,-50%) scale(1.10); opacity: 0.85; }
+    }
+    @keyframes orbit {
+      from { transform: rotate(0deg) translateX(var(--r)) rotate(0deg); }
+      to   { transform: rotate(360deg) translateX(var(--r)) rotate(-360deg); }
+    }
+
+    /* ════════════════════════════════════
+       SC2 — PARTICULES TOMBANTES
+    ════════════════════════════════════ */
+    @keyframes fall {
+      from { transform: translateY(-6vh) rotate(0deg);    opacity: 0.9; }
+      to   { transform: translateY(108vh) rotate(200deg); opacity: 0; }
+    }
+
+    /* ════════════════════════════════════
+       SC3 — RÉSEAU DE CONNEXIONS (canvas)
+    ════════════════════════════════════ */
+
+    /* ════════════════════════════════════
+       SC4 — TIMER CIRCULAIRE SVG
+    ════════════════════════════════════ */
+    @keyframes fill-arc {
+      from { stroke-dashoffset: 314; }
+      to   { stroke-dashoffset: 110; }
+    }
+    @keyframes ring-spin {
+      from { transform: rotate(-90deg); }
+      to   { transform: rotate(270deg); }
+    }
+    .timer-ring { animation: ring-spin 8s linear infinite; transform-origin: center; }
+    .timer-fill {
+      stroke-dasharray: 314;
+      stroke-dashoffset: 314;
+      animation: fill-arc 1.5s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    /* ════════════════════════════════════
+       SC5 — EXPLOSION OR + ANNEAUX
+    ════════════════════════════════════ */
+    @keyframes burst {
+      from { transform: translate(0,0) scale(0.2); opacity: 1; }
+      to   { transform: translate(var(--tx),var(--ty)) scale(1); opacity: 0; }
+    }
+    @keyframes ring-expand {
+      from { transform: translate(-50%,-50%) scale(0); opacity: 0.75; }
+      to   { transform: translate(-50%,-50%) scale(5); opacity: 0; }
+    }
+    @keyframes coin-fall {
+      0%   { transform: translateY(0) rotate(0deg) scale(1);   opacity: 1; }
+      100% { transform: translateY(-90px) rotate(180deg) scale(0.5); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="phone" id="phone">
+
+  <div class="vi" id="vi">
+    <div class="vb"></div><div class="vb"></div><div class="vb"></div>
+    <div class="vb"></div><div class="vb"></div>
+  </div>
+  <button class="voice-btn" id="vbtn" onclick="toggleMute(event)">🔊</button>
+
+  <!-- ══════════════════════════════════════
+       SC1 — HOOK : LE LEVIER > LE HUSTLE
+  ══════════════════════════════════════ -->
+  <div class="scene active" id="sc1">
+    <div class="bg-anim" id="bg1"></div>
+    <div class="content">
+      <span class="label">01 — La vérité africaine</span>
+
+      <div class="title-block naked">
+        <h1 class="title mid" style="color:var(--muted); font-weight:600; line-height:1.3;">
+          En Afrique, on ne scale pas<br>avec
+        </h1>
+        <h1 class="title big kw3" id="t1"></h1>
+      </div>
+
+      <div class="sep s3"></div>
+
+      <div class="title-block naked">
+        <p class="title mid" style="color:var(--muted); font-weight:600;">
+          On scale avec
+        </p>
+        <h1 class="title big kw1" id="t2"></h1>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SC2 — PROBLÈME : LE HUSTLE NE SCALE PAS
+  ══════════════════════════════════════ -->
+  <div class="scene" id="sc2">
+    <div class="bg-anim" id="bg2"></div>
+    <div class="content">
+      <span class="label l3">02 — Le vrai problème</span>
+
+      <div class="stat" id="stat">
+        <div class="stat-num">14h</div>
+        <div class="stat-desc">par jour · et l'argent ne scale pas</div>
+      </div>
+
+      <div class="title-block">
+        <h2 class="title mid">
+          Tu t'épuises.<br>
+          Mais ton <span class="kw3">temps est plafonné.</span><br>
+          Ton argent aussi.
+        </h2>
+      </div>
+
+      <p class="title small" style="color:var(--muted);">
+        Temps × effort ≠ liberté · <span class="kw1">Levier</span> = liberté
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SC3 — SOLUTION : IA + SYSTÈMES
+  ══════════════════════════════════════ -->
+  <div class="scene" id="sc3">
+    <div class="bg-anim" id="bg3">
+      <canvas id="netCanvas"></canvas>
+    </div>
+    <div class="content">
+      <span class="label l2">03 — Le levier</span>
+
+      <div class="title-block b2">
+        <h2 class="title">
+          <span class="kw2">IA + systèmes</span><br>
+          travaillent quand<br>
+          <span class="kw1">tu dors.</span>
+        </h2>
+      </div>
+
+      <div class="sep s2"></div>
+
+      <div class="items" id="isc3">
+        <div class="item" data-delay="0">
+          <span class="item-icon">🤖</span>
+          <span>L'<span class="kw2">IA</span> automatise ce qui te prend des heures</span>
+        </div>
+        <div class="item" data-delay="380">
+          <span class="item-icon">🔄</span>
+          <span>Un <span class="kw2">système</span> tourne sans toi 24h/24</span>
+        </div>
+        <div class="item" data-delay="760">
+          <span class="item-icon">📈</span>
+          <span>Le <span class="kw1">levier</span> multiplie sans multiplier l'effort</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SC4 — APPLICATION : 3 LEVIERS
+  ══════════════════════════════════════ -->
+  <div class="scene" id="sc4">
+    <div class="bg-anim" id="bg4"></div>
+    <div class="content">
+      <span class="label">04 — Tes 3 leviers</span>
+
+      <!-- Timer circulaire SVG -->
+      <svg id="timer-svg" width="90" height="90" viewBox="0 0 110 110"
+           style="position:relative;z-index:1;flex-shrink:0;">
+        <circle cx="55" cy="55" r="50" fill="none"
+                stroke="rgba(251,191,36,0.12)" stroke-width="8"/>
+        <circle cx="55" cy="55" r="50" fill="none"
+                stroke="url(#tg)" stroke-width="8"
+                stroke-linecap="round"
+                class="timer-fill"
+                transform="rotate(-90 55 55)"/>
+        <defs>
+          <linearGradient id="tg" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%"   stop-color="#FBBF24"/>
+            <stop offset="100%" stop-color="#C084FC"/>
+          </linearGradient>
+        </defs>
+        <text x="55" y="60" text-anchor="middle"
+              font-family="Inter,sans-serif" font-weight="900"
+              font-size="20" fill="#FBBF24">3×</text>
+      </svg>
+
+      <div class="items" id="isc4">
+        <div class="item i1" data-delay="0">
+          <span class="item-icon">💰</span>
+          <span>Automatise ta <span class="kw1">prospection</span></span>
+        </div>
+        <div class="item i1" data-delay="320">
+          <span class="item-icon">📧</span>
+          <span>Automatise ton <span class="kw1">follow-up</span></span>
+        </div>
+        <div class="item i1" data-delay="640">
+          <span class="item-icon">🤖</span>
+          <span>Délègue à l'<span class="kw2">IA</span> tout ce qui ne crée pas de valeur</span>
+        </div>
+        <div class="item i1" data-delay="960">
+          <span class="item-icon">📊</span>
+          <span>Mesure ce qui <span class="kw1">rapporte</span> · Coupe le reste</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SC5 — CTA
+  ══════════════════════════════════════ -->
+  <div class="scene" id="sc5">
+    <div class="bg-anim" id="bg5"></div>
+    <div class="content">
+      <span class="label">05 — Ton premier levier</span>
+
+      <div class="title-block">
+        <h2 class="title">
+          Quel système tu veux<br>
+          construire pour<br>
+          <span class="kw1">scaler cette semaine ?</span>
+        </h2>
+      </div>
+
+      <button class="cta">Commente <strong>LEVIER</strong> 👇</button>
+
+      <p class="sub-cta">Je t'explique comment le construire</p>
+    </div>
+  </div>
+
+  <div class="hint" id="hint">← CLIC ou → pour naviguer · M pour mute</div>
+  <div class="dots">
+    <div class="dot active" id="d0"></div>
+    <div class="dot" id="d1"></div>
+    <div class="dot" id="d2"></div>
+    <div class="dot" id="d3"></div>
+    <div class="dot" id="d4"></div>
+  </div>
+
+</div>
+
+<script>
+  /* ── Voix ── */
+  const SPEECH = [
+    "En Afrique, on ne scale pas avec plus d'effort. On scale avec plus de levier.",
+    "Tu travailles 14 heures par jour. Tu t'épuises. Mais ton temps est plafonné — et ton argent aussi. Le hustle ne scale pas.",
+    "La différence ? L'IA et les systèmes travaillent quand tu dors. Un système tourne sans toi 24 heures sur 24. Le levier multiplie sans multiplier ton effort.",
+    "Tes 3 leviers concrets : automatiser ta prospection, automatiser ton follow-up, et déléguer à l'IA tout ce qui ne crée pas de valeur. Mesure ce qui rapporte. Coupe le reste.",
+    "Dis-moi en commentaire quel système tu veux construire pour scaler cette semaine. Commente LEVIER. Je t'explique comment le construire."
+  ];
+
+  let EL_KEY = localStorage.getItem('el_key') || '';
+  const EL_VOICE = 'XB0fDUnXU5powFXDhCwa';
+  let currentAudio = null, voiceMuted = false;
+
+  async function speakEL(text) {
+    if (!EL_KEY || voiceMuted) return;
+    currentAudio?.pause();
+    try {
+      const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${EL_VOICE}/stream`, {
+        method: 'POST',
+        headers: { 'xi-api-key': EL_KEY, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg' },
+        body: JSON.stringify({
+          text, model_id: 'eleven_multilingual_v2',
+          voice_settings: { stability: 0.58, similarity_boost: 0.80, style: 0.14, use_speaker_boost: true }
+        })
+      });
+      if (!res.ok) throw new Error(res.status);
+      const blob = await res.blob();
+      currentAudio = new Audio(URL.createObjectURL(blob));
+      currentAudio.onplay  = () => document.getElementById('vi').classList.add('on');
+      currentAudio.onended = () => document.getElementById('vi').classList.remove('on');
+      currentAudio.onerror = () => document.getElementById('vi').classList.remove('on');
+      await currentAudio.play();
+    } catch(e) { console.warn('EL:', e); }
+  }
+
+  function speakFallback(text) {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'fr-FR'; u.rate = 0.87; u.pitch = 1.1;
+    const v = speechSynthesis.getVoices().find(v => v.lang.startsWith('fr'));
+    if (v) u.voice = v;
+    u.onstart = () => document.getElementById('vi').classList.add('on');
+    u.onend   = () => document.getElementById('vi').classList.remove('on');
+    speechSynthesis.speak(u);
+  }
+
+  function speakScene(idx) {
+    speechSynthesis.cancel(); currentAudio?.pause();
+    document.getElementById('vi').classList.remove('on');
+    if (voiceMuted) return;
+    EL_KEY ? speakEL(SPEECH[idx]) : speakFallback(SPEECH[idx]);
+  }
+
+  function toggleMute(e) {
+    e?.stopPropagation();
+    voiceMuted = !voiceMuted;
+    const btn = document.getElementById('vbtn');
+    btn.textContent = voiceMuted ? '🔇' : '🔊';
+    btn.classList.toggle('muted', voiceMuted);
+    if (voiceMuted) { speechSynthesis.cancel(); currentAudio?.pause(); document.getElementById('vi').classList.remove('on'); }
+    else speakScene(current);
+  }
+
+  /* ── SC1 : Cosmos doré ── */
+  function buildBg1() {
+    const bg = document.getElementById('bg1');
+
+    // Grand halo central
+    const halo = document.createElement('div');
+    halo.style.cssText = `
+      position:absolute; width:420px; height:420px;
+      top:50%; left:50%;
+      border-radius:50%;
+      background: radial-gradient(circle, rgba(251,191,36,0.14) 0%, rgba(244,63,94,0.06) 50%, transparent 72%);
+      animation: halo-breathe 4s ease-in-out infinite;
+    `;
+    bg.appendChild(halo);
+
+    // Second halo plus petit lavande
+    const halo2 = document.createElement('div');
+    halo2.style.cssText = `
+      position:absolute; width:220px; height:220px;
+      top:50%; left:50%;
+      border-radius:50%;
+      background: radial-gradient(circle, rgba(192,132,252,0.18) 0%, transparent 70%);
+      animation: halo-breathe 3s ease-in-out infinite reverse;
+    `;
+    bg.appendChild(halo2);
+
+    // Étoiles orbitantes
+    const orbitData = [
+      { r:'130px', dur:'12s', size:4, color:'rgba(251,191,36,0.9)' },
+      { r:'165px', dur:'18s', size:3, color:'rgba(192,132,252,0.8)' },
+      { r:'100px', dur:'9s',  size:5, color:'rgba(251,191,36,0.7)' },
+      { r:'190px', dur:'22s', size:2.5, color:'rgba(244,63,94,0.7)' },
+    ];
+    orbitData.forEach((o, i) => {
+      const wrap = document.createElement('div');
+      wrap.style.cssText = `position:absolute;top:50%;left:50%;width:0;height:0;`;
+      const dot = document.createElement('div');
+      dot.style.cssText = `
+        position:absolute;
+        width:${o.size}px; height:${o.size}px;
+        border-radius:50%;
+        background:${o.color};
+        box-shadow:0 0 ${o.size*3}px ${o.color};
+        --r:${o.r};
+        animation:orbit ${o.dur} linear infinite;
+        animation-delay:${i*(-2.5)}s;
+      `;
+      wrap.appendChild(dot);
+      bg.appendChild(wrap);
+    });
+
+    // Particules montantes dorées
+    for (let i = 0; i < 30; i++) {
+      const p = document.createElement('div');
+      const s = Math.random() * 2.5 + 1;
+      const isGold = Math.random() > 0.4;
+      p.style.cssText = [
+        'position:absolute','border-radius:50%','pointer-events:none',
+        `width:${s}px`,`height:${s}px`,
+        `background:${isGold ? `rgba(251,191,36,${0.6+Math.random()*0.3})` : `rgba(192,132,252,${0.5+Math.random()*0.3})`}`,
+        `left:${Math.random()*100}%`,`bottom:${-s}px`,
+        `--dx:${(Math.random()-0.5)*55}px`,
+        `animation:rise ${5+Math.random()*8}s linear infinite`,
+        `animation-delay:${Math.random()*9}s`,`opacity:0`
+      ].join(';');
+      bg.appendChild(p);
+    }
+  }
+
+  /* ── SC2 : Particules tombantes + fantôme ── */
+  function buildBg2() {
+    const bg = document.getElementById('bg2');
+
+    // Particules tombantes (effort qui tombe)
+    for (let i = 0; i < 32; i++) {
+      const p = document.createElement('div');
+      const s = Math.random() * 5 + 2.5;
+      const shapes = ['50%','2px','0px','3px'];
+      const colors = [
+        `rgba(244,63,94,${0.45+Math.random()*0.4})`,
+        `rgba(251,191,36,${0.25+Math.random()*0.25})`,
+      ];
+      p.style.cssText = [
+        'position:absolute',
+        `width:${s}px`,`height:${s}px`,
+        `background:${colors[i%2]}`,
+        `border-radius:${shapes[i%4]}`,
+        `left:${Math.random()*100}%`, `top:${-s}px`,
+        `animation:fall ${3+Math.random()*4.5}s linear infinite`,
+        `animation-delay:${Math.random()*7}s`
+      ].join(';');
+      bg.appendChild(p);
+    }
+
+    // Chiffre fantôme
+    const ghost = document.createElement('div');
+    ghost.style.cssText = 'position:absolute;bottom:6%;left:50%;transform:translateX(-50%);font-size:clamp(5rem,30vw,14rem);font-weight:900;color:rgba(244,63,94,0.032);line-height:1;pointer-events:none;font-family:Inter,sans-serif;letter-spacing:-0.04em;white-space:nowrap;';
+    ghost.textContent = '14H';
+    bg.appendChild(ghost);
+  }
+
+  /* ── SC3 : Réseau de connexions canvas ── */
+  function buildBg3() {
+    const canvas = document.getElementById('netCanvas');
+    const phone = document.getElementById('phone');
+    canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;';
+    canvas.width  = phone.offsetWidth  || 338;
+    canvas.height = phone.offsetHeight || 600;
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+
+    // Nœuds fixes (représentent IA, système, levier, output, user)
+    const nodes = [
+      { x: W*0.5, y: H*0.28, label:'IA',       col:'rgba(192,132,252,0.9)' },
+      { x: W*0.2, y: H*0.45, label:'Système',  col:'rgba(251,191,36,0.85)' },
+      { x: W*0.8, y: H*0.45, label:'Process',  col:'rgba(251,191,36,0.85)' },
+      { x: W*0.35,y: H*0.65, label:'Scale',    col:'rgba(244,63,94,0.8)'  },
+      { x: W*0.65,y: H*0.65, label:'Impact',   col:'rgba(244,63,94,0.8)'  },
+      { x: W*0.5, y: H*0.80, label:'Liberté',  col:'rgba(251,191,36,0.9)' },
+    ];
+    const edges = [[0,1],[0,2],[1,3],[2,4],[3,5],[4,5],[0,5],[1,4],[2,3]];
+
+    let pulse = 0;
+    function draw() {
+      ctx.clearRect(0,0,W,H);
+      pulse += 0.018;
+
+      // Arêtes
+      edges.forEach(([a,b]) => {
+        const t = (Math.sin(pulse + a * 0.7) + 1) / 2;
+        const alpha = 0.12 + t * 0.22;
+        ctx.beginPath();
+        ctx.moveTo(nodes[a].x, nodes[a].y);
+        ctx.lineTo(nodes[b].x, nodes[b].y);
+        ctx.strokeStyle = `rgba(192,132,252,${alpha})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Particule qui voyage le long de l'arête
+        const prog = (pulse * 0.4 + a * 0.3) % 1;
+        const px = nodes[a].x + (nodes[b].x - nodes[a].x) * prog;
+        const py = nodes[a].y + (nodes[b].y - nodes[a].y) * prog;
+        ctx.beginPath();
+        ctx.arc(px, py, 2.5, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(251,191,36,0.8)';
+        ctx.fill();
+      });
+
+      // Nœuds
+      nodes.forEach((n, i) => {
+        const glow = (Math.sin(pulse + i * 0.9) + 1) / 2;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, 5 + glow * 2, 0, Math.PI*2);
+        ctx.fillStyle = n.col;
+        ctx.fill();
+        // Halo
+        const grad = ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,20+glow*6);
+        grad.addColorStop(0, n.col.replace('0.9','0.25').replace('0.85','0.2').replace('0.8','0.18'));
+        grad.addColorStop(1, 'transparent');
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, 20+glow*6, 0, Math.PI*2);
+        ctx.fillStyle = grad;
+        ctx.fill();
+      });
+
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
+  /* ── SC4 : Fond particules or + reset timer ── */
+  function buildBg4() {
+    const bg = document.getElementById('bg4');
+    for (let i = 0; i < 22; i++) {
+      const p = document.createElement('div');
+      const s = Math.random() * 2 + 1;
+      p.style.cssText = [
+        'position:absolute','border-radius:50%','pointer-events:none',
+        `width:${s}px`,`height:${s}px`,
+        `background:rgba(251,191,36,${0.45+Math.random()*0.35})`,
+        `left:${Math.random()*100}%`,`bottom:${-s}px`,
+        `--dx:${(Math.random()-0.5)*40}px`,
+        `animation:rise ${5+Math.random()*7}s linear infinite`,
+        `animation-delay:${Math.random()*8}s`,`opacity:0`
+      ].join(';');
+      bg.appendChild(p);
+    }
+  }
+
+  /* ── SC5 : Explosion or + anneaux ── */
+  function buildBg5() {
+    const bg = document.getElementById('bg5');
+
+    // Anneaux concentriques
+    const rings = [
+      { size:80,  col:'rgba(251,191,36,0.6)',  del:0,    dur:2.8 },
+      { size:160, col:'rgba(192,132,252,0.5)', del:0.55, dur:3.1 },
+      { size:260, col:'rgba(251,191,36,0.4)',  del:1.1,  dur:3.4 },
+      { size:380, col:'rgba(244,63,94,0.35)',  del:1.65, dur:3.8 },
+    ];
+    rings.forEach(r => {
+      const el = document.createElement('div');
+      el.style.cssText = `
+        position:absolute; left:50%; top:42%;
+        width:${r.size}px; height:${r.size}px;
+        margin-left:-${r.size/2}px; margin-top:-${r.size/2}px;
+        border-radius:50%;
+        border:1.5px solid ${r.col};
+        animation:ring-expand ${r.dur}s ease-out infinite;
+        animation-delay:${r.del}s;
+      `;
+      bg.appendChild(el);
+    });
+
+    // Burst de particules
+    const palette = ['rgba(251,191,36,0.9)','rgba(192,132,252,0.85)','rgba(244,63,94,0.8)'];
+    for (let i = 0; i < 24; i++) {
+      const angle = (i/24)*Math.PI*2;
+      const dist  = 50 + Math.random()*110;
+      const el = document.createElement('div');
+      el.style.cssText = [
+        'position:absolute','left:50%','top:42%','border-radius:50%',
+        `width:${4+Math.random()*6}px`,`height:${4+Math.random()*6}px`,
+        `background:${palette[i%3]}`,
+        `--tx:${Math.cos(angle)*dist}px`,
+        `--ty:${Math.sin(angle)*dist}px`,
+        `animation:burst ${1.8+Math.random()*0.9}s ease-out infinite`,
+        `animation-delay:${Math.random()*2.4}s`
+      ].join(';');
+      bg.appendChild(el);
+    }
+
+    // Pièces / symboles flottants (finance)
+    const symbols = ['💰','✨','🌟','💛','⭐','💎'];
+    const hPos = [[15,72],[28,78],[42,82],[58,82],[72,78],[85,72],[35,88],[65,88]];
+    hPos.forEach(([x,y],i) => {
+      const el = document.createElement('div');
+      el.style.cssText = [
+        'position:absolute', `left:${x}%`, `bottom:${100-y}%`,
+        `animation:coin-fall ${2.2+Math.random()*0.8}s ease-out infinite`,
+        `animation-delay:${i*0.35}s`,
+        'font-size:1.1rem'
+      ].join(';');
+      el.textContent = symbols[i%symbols.length];
+      bg.appendChild(el);
+    });
+
+    // Particules montantes
+    for (let i = 0; i < 20; i++) {
+      const p = document.createElement('div');
+      const s = Math.random() * 2.5 + 1;
+      p.style.cssText = [
+        'position:absolute','border-radius:50%','pointer-events:none',
+        `width:${s}px`,`height:${s}px`,
+        `background:rgba(251,191,36,${0.5+Math.random()*0.4})`,
+        `left:${Math.random()*100}%`,`bottom:${-s}px`,
+        `--dx:${(Math.random()-0.5)*50}px`,
+        `animation:rise ${4+Math.random()*6}s linear infinite`,
+        `animation-delay:${Math.random()*7}s`,`opacity:0`
+      ].join(';');
+      bg.appendChild(p);
+    }
+  }
+
+  /* ── Reset timer SC4 ── */
+  function resetTimer() {
+    const fill = document.querySelector('.timer-fill');
+    if (!fill) return;
+    fill.style.animation = 'none';
+    void fill.offsetWidth;
+    fill.style.animation = 'fill-arc 1.5s cubic-bezier(0.16,1,0.3,1) forwards';
+  }
+
+  /* ── Navigation ── */
+  const SCENES = ['sc1','sc2','sc3','sc4','sc5'];
+  let current = 0;
+
+  function typeText(el, text, speed, curClass, cb) {
+    if (!el) { cb?.(); return; }
+    el.innerHTML = ''; let i = 0;
+    const cur = document.createElement('span');
+    cur.className = 'cursor' + (curClass ? ' '+curClass : '');
+    el.appendChild(cur);
+    const iv = setInterval(() => {
+      cur.before(text[i++]);
+      if (i >= text.length) {
+        clearInterval(iv);
+        setTimeout(() => cur.remove(), 1200);
+        cb?.();
+      }
+    }, speed);
+  }
+
+  function showItems(id) {
+    document.querySelectorAll(`#${id} .item`).forEach(el =>
+      setTimeout(() => el.classList.add('shown'), +el.dataset.delay + 280));
+  }
+  function hideItems(id) {
+    document.querySelectorAll(`#${id} .item`).forEach(el => el.classList.remove('shown'));
+  }
+
+  function goTo(idx) {
+    idx = ((idx % SCENES.length) + SCENES.length) % SCENES.length;
+    document.getElementById(SCENES[current]).classList.remove('active');
+    hideItems(SCENES[current]);
+    current = idx;
+    document.getElementById(SCENES[current]).classList.add('active');
+    document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i===current));
+
+    if (current === 0) {
+      document.getElementById('t1').textContent = '';
+      document.getElementById('t2').textContent = '';
+      setTimeout(() =>
+        typeText(document.getElementById('t1'), "PLUS D'EFFORT.", 65, 'c2', () =>
+          setTimeout(() =>
+            typeText(document.getElementById('t2'), 'PLUS DE LEVIER.', 65), 520)
+        ), 380);
+    }
+    if (current === 1) {
+      const s = document.getElementById('stat');
+      s.classList.remove('pop'); void s.offsetWidth; s.classList.add('pop');
+    }
+    if (current === 2) showItems('sc3');
+    if (current === 3) { showItems('sc4'); resetTimer(); }
+
+    speakScene(current);
+  }
+
+  /* ── Init ── */
+  // Keyframes globales
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `
+    @keyframes rise{0%{transform:translateY(0) translateX(0);opacity:0}8%{opacity:1}92%{opacity:.65}100%{transform:translateY(-100vh) translateX(var(--dx));opacity:0}}
+    @keyframes halo-breathe{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.55}50%{transform:translate(-50%,-50%) scale(1.10);opacity:.85}}
+    @keyframes orbit{from{transform:rotate(0deg) translateX(var(--r)) rotate(0deg)}to{transform:rotate(360deg) translateX(var(--r)) rotate(-360deg)}}
+  `;
+  document.head.appendChild(styleEl);
+
+  buildBg1(); buildBg2(); buildBg3(); buildBg4(); buildBg5();
+
+  document.getElementById('phone').addEventListener('click', e => {
+    if (!e.target.closest('.voice-btn')) goTo(current + 1);
+  });
+  document.addEventListener('keydown', e => {
+    if (['ArrowRight',' ','Enter'].includes(e.key)) { e.preventDefault(); goTo(current+1); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(current-1); }
+    else if (e.key.toLowerCase() === 'm') toggleMute();
+  });
+
+  goTo(0);
+  setTimeout(() => document.getElementById('hint').classList.add('gone'), 6000);
+</script>
+</body>
+</html>

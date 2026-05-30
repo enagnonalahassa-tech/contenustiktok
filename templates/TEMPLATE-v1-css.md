@@ -59,7 +59,7 @@ SCRIPT:
 
 AESTHETIQUE:
   # Choisir UN style parmi les options :
-  # dark-feminine | dark-masculine | minimal-premium | vibrant-genz | nature-organic | custom
+  # dark-feminine | elegant-feminin | minimal-premium | vibrant-genz | nature-organic | custom
   style: "[Ex : dark-feminine]"
 
   # Si style = custom, définir ici (sinon laisser vide) :
