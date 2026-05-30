@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Short 04 V3 — Le levier bat le hustle</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0D0514;
+      --bg-rgb:   13,5,20;
+      --acc1:     #FBBF24;
+      --acc1-rgb: 251,191,36;
+      --acc2:     #C084FC;
+      --acc2-rgb: 192,132,252;
+      --acc3:     #F43F5E;
+      --acc3-rgb: 244,63,94;
+      --text:     #FDF4FF;
+      --muted:    rgba(253,244,255,0.50);
+    }
+
+    body {
+      background: #030008;
+      min-height: 100vh;
+      display: flex; justify-content: center; align-items: center;
+      font-family: 'Inter', sans-serif;
+      overflow: hidden; user-select: none;
+    }
+
+    /* ── Écran API Key ElevenLabs ── */
+    #api-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+    }
+    #api-overlay .box {
+      background: #1A0A2E; border-radius: 24px;
+      border: 1px solid rgba(251,191,36,0.28);
+      padding: 2.5rem 2rem; max-width: 340px; width: 90%; text-align: center;
+    }
+    #api-overlay .icon { font-size: 2.4rem; margin-bottom: 0.8rem; }
+    #api-overlay h2 { color: #FDF4FF; font-size: 1.2rem; margin-bottom: 0.4rem; }
+    #api-overlay p  { color: rgba(253,244,255,0.52); font-size: 0.88rem; margin-bottom: 1.4rem; line-height: 1.5; }
+    #el-key {
+      width: 100%; padding: 0.8rem 1rem; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.14); background: #0D0514;
+      color: #FDF4FF; font-size: 1rem; margin-bottom: 0.9rem;
+      font-family: 'Inter', sans-serif;
+    }
+    #el-key::placeholder { color: rgba(255,255,255,0.25); }
+    .btn-primary {
+      width: 100%; padding: 0.88rem; border-radius: 12px; border: none;
+      cursor: pointer; font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem;
+      background: linear-gradient(135deg, var(--acc1), var(--acc2));
+      color: #1a0800; font-family: 'Inter', sans-serif;
+    }
+    .btn-skip {
+      background: none; border: none; cursor: pointer;
+      color: rgba(255,255,255,0.32); font-size: 0.84rem; font-family: 'Inter', sans-serif;
+    }
+
+    /* ── Cadre 9:16 ── */
+    .phone {
+      position: relative;
+      aspect-ratio: 9/16; height: 94vh; max-height: 800px;
+      border-radius: 28px; overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.05),
+        0 50px 120px rgba(0,0,0,0.92),
+        0 0 100px rgba(251,191,36,0.09);
+    }
+
+    /* ── Indicateur voix ── */
+    #vi {
+      position: absolute; top: 1.2rem; left: 1.2rem; z-index: 30;
+      display: flex; align-items: center; gap: 3px;
+      padding: 4px 10px; border-radius: 20px;
+      background: rgba(13,5,20,0.65); backdrop-filter: blur(12px);
+      border: 1px solid rgba(251,191,36,0.22);
+      opacity: 0; transition: opacity 0.4s;
+    }
+    #vi.on { opacity: 1; }
+    .vb { width: 3px; border-radius: 2px; background: var(--acc1);
+          animation: vw 0.6s ease-in-out infinite alternate; }
+    .vb:nth-child(1){height:8px;  animation-delay:0s}
+    .vb:nth-child(2){height:14px; animation-delay:.1s}
+    .vb:nth-child(3){height:10px; animation-delay:.2s}
+    .vb:nth-child(4){height:16px; animation-delay:.05s}
+    .vb:nth-child(5){height:8px;  animation-delay:.15s}
+    @keyframes vw { from{transform:scaleY(.4);opacity:.6} to{transform:scaleY(1);opacity:1} }
+
+    .voice-btn {
+      position: absolute; top: 1.2rem; right: 1.2rem; z-index: 30;
+      width: 34px; height: 34px; border-radius: 50%; border: none; cursor: pointer;
+      background: rgba(13,5,20,0.65); backdrop-filter: blur(12px);
+      border: 1px solid rgba(251,191,36,0.28);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95rem; transition: all 0.2s;
+    }
+    .voice-btn:hover { transform: scale(1.1); }
+    .voice-btn.muted { opacity: 0.4; }
+
+    /* ── Scènes ── */
+    .scene {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      padding: 3rem 1.6rem 5rem;
+      opacity: 0; pointer-events: none;
+      transform: translateY(16px) scale(0.98);
+      transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1),
+                  transform 0.7s cubic-bezier(0.4,0,0.2,1);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      overflow: hidden;
+    }
+    .scene.active  { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
+    .scene.exiting { opacity: 0; transform: translateY(-16px) scale(0.98); }
+
+    /* Fallback CSS gradients (actifs sans images IA) */
+    #sc1 { background-color: #1a0d00; background-image:
+      radial-gradient(ellipse at 40% 30%, rgba(251,191,36,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse at 70% 70%, rgba(192,132,252,0.12) 0%, transparent 50%),
+      linear-gradient(170deg,#160822 0%,#0D0514 50%,#060005 100%); }
+    #sc2 { background-color: #100208; background-image:
+      radial-gradient(ellipse at 60% 60%, rgba(244,63,94,0.16) 0%, transparent 55%),
+      linear-gradient(170deg,#1c050e 0%,#0D0514 55%,#060005 100%); }
+    #sc3 { background-color: #04060e; background-image:
+      radial-gradient(ellipse at 45% 25%, rgba(192,132,252,0.14) 0%, transparent 55%),
+      radial-gradient(ellipse at 70% 70%, rgba(251,191,36,0.10) 0%, transparent 50%),
+      linear-gradient(170deg,#070e24 0%,#0D0514 55%,#04000f 100%); }
+    #sc4 { background-color: #060514; background-image:
+      radial-gradient(ellipse at 35% 65%, rgba(251,191,36,0.14) 0%, transparent 55%),
+      radial-gradient(ellipse at 65% 25%, rgba(192,132,252,0.12) 0%, transparent 50%),
+      linear-gradient(170deg,#0a0820 0%,#0D0514 55%,#040010 100%); }
+    #sc5 { background-color: #100508; background-image:
+      radial-gradient(ellipse at 50% 45%, rgba(251,191,36,0.20) 0%, transparent 50%),
+      radial-gradient(ellipse at 25% 75%, rgba(244,63,94,0.12) 0%, transparent 45%),
+      linear-gradient(170deg,#160a00 0%,#0D0514 50%,#06000a 100%); }
+
+    /* Images IA */
+    #sc1 { background-image: url('assets/images/sc1-hook.jpg'); }
+    #sc2 { background-image: url('assets/images/sc2-probleme.jpg'); }
+    #sc3 { background-image: url('assets/images/sc3-solution.jpg'); }
+    #sc4 { background-image: url('assets/images/sc4-application.jpg'); }
+    #sc5 { background-image: url('assets/images/sc5-cta.jpg'); }
+
+    /* Overlay lisibilité (renforcé pour images réelles) */
+    .scene::before {
+      content: ''; position: absolute; inset: 0; z-index: 0;
+      background: linear-gradient(to bottom,
+        rgba(13,5,20,0.70) 0%,
+        rgba(13,5,20,0.18) 28%,
+        rgba(13,5,20,0.15) 62%,
+        rgba(13,5,20,0.80) 100%);
+      pointer-events: none;
+    }
+
+    /* Grain filmique */
+    .scene::after {
+      content: ''; position: absolute; inset: 0; z-index: 1;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.022'/%3E%3C/svg%3E");
+      background-size: 180px; pointer-events: none;
+    }
+
+    /* ── Contenu ── */
+    .content {
+      position: relative; z-index: 10; width: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center; gap: 1.25rem;
+    }
+
+    /* ── Typographie ── */
+    .label {
+      font-size: 0.56rem; font-weight: 700;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: rgba(251,191,36,0.68);
+    }
+    .label.l2 { color: rgba(192,132,252,0.65); }
+    .label.l3 { color: rgba(244,63,94,0.65); }
+
+    .title {
+      font-size: clamp(1.85rem,5.6vh,2.9rem);
+      font-weight: 900; line-height: 1.12; color: var(--text);
+      letter-spacing: -0.025em;
+      text-shadow: 0 2px 24px rgba(0,0,0,0.95), 0 0 55px rgba(0,0,0,0.55);
+    }
+    .title.big   { font-size: clamp(2.1rem,6.5vh,3.4rem); }
+    .title.mid   { font-size: clamp(1.35rem,4.2vh,2.15rem); }
+    .title.small { font-size: clamp(1.05rem,3.2vh,1.65rem); }
+
+    .kw1 { color: var(--acc1); text-shadow: 0 0 32px rgba(251,191,36,0.78); }
+    .kw2 { color: var(--acc2); text-shadow: 0 0 28px rgba(192,132,252,0.72); }
+    .kw3 { color: var(--acc3); text-shadow: 0 0 28px rgba(244,63,94,0.68); }
+
+    .title-block {
+      padding: 1rem 1.3rem; border-radius: 18px;
+      background: rgba(13,5,20,0.52);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(251,191,36,0.16); width: 100%;
+    }
+    .title-block.b2 { border-color: rgba(192,132,252,0.18); }
+    .title-block.b3 { border-color: rgba(244,63,94,0.16); }
+    .title-block.naked { background: transparent; backdrop-filter: none; border: none; padding: 0; }
+
+    .sep {
+      width: 44px; height: 3px; border-radius: 2px;
+      background: var(--acc1); box-shadow: 0 0 18px rgba(251,191,36,0.72);
+    }
+    .sep.s2 { background: var(--acc2); box-shadow: 0 0 16px rgba(192,132,252,0.65); }
+    .sep.s3 { background: var(--acc3); box-shadow: 0 0 16px rgba(244,63,94,0.6); }
+
+    /* ── Stat ── */
+    .stat {
+      display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
+      padding: 1rem 2.2rem; border-radius: 18px;
+      border: 1.5px solid rgba(244,63,94,0.42);
+      background: rgba(13,5,20,0.58);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    }
+    .stat-num {
+      font-size: clamp(2.9rem,9vh,4.5rem); font-weight: 900; line-height: 1;
+      color: var(--acc3); text-shadow: 0 0 55px rgba(244,63,94,0.68);
+    }
+    .stat-desc {
+      font-size: clamp(0.63rem,1.9vh,0.83rem); font-weight: 600;
+      color: rgba(253,244,255,0.52); text-transform: uppercase; letter-spacing: 0.11em;
+    }
+    @keyframes pop-in {
+      from { opacity:0; transform: scale(0.62) translateY(10px); }
+      to   { opacity:1; transform: scale(1) translateY(0); }
+    }
+    .stat.pop { animation: pop-in 0.55s cubic-bezier(0.16,1,0.3,1) forwards; }
+
+    /* ── Items liste ── */
+    .items { width: 100%; display: flex; flex-direction: column; gap: 0.6rem; }
+    .item {
+      display: flex; align-items: center; gap: 0.78rem;
+      padding: 0.82rem 1rem; border-radius: 14px;
+      background: rgba(13,5,20,0.55);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(192,132,252,0.2);
+      font-size: clamp(0.83rem,2.45vh,1.08rem); font-weight: 700; color: var(--text);
+      text-shadow: 0 1px 10px rgba(0,0,0,0.8);
+      opacity: 0; transform: translateX(-18px);
+      transition: opacity 0.42s ease, transform 0.42s ease;
+    }
+    .item.i1 { border-color: rgba(251,191,36,0.24); }
+    .item.shown { opacity:1; transform: translateX(0); }
+    .item-icon { font-size: 1.25em; flex-shrink: 0; }
+
+    /* ── Timer circulaire (sc4) ── */
+    #timer-wrap {
+      position: relative; width: 88px; height: 88px; flex-shrink: 0;
+      filter: drop-shadow(0 0 18px rgba(251,191,36,0.5));
+    }
+    .timer-fill {
+      stroke-dasharray: 314; stroke-dashoffset: 314;
+      animation: fill-arc 1.5s cubic-bezier(0.16,1,0.3,1) forwards;
+      transform-origin: center;
+    }
+    @keyframes fill-arc {
+      from { stroke-dashoffset: 314; }
+      to   { stroke-dashoffset: 110; }
+    }
+
+    /* ── CTA ── */
+    .cta {
+      padding: 1rem 2rem; border: none; cursor: pointer;
+      background: linear-gradient(135deg, var(--acc1) 0%, var(--acc3) 100%);
+      border-radius: 50px;
+      font-size: clamp(1rem,3vh,1.3rem); font-weight: 900;
+      color: #1a0800; font-family: 'Inter', sans-serif; letter-spacing: 0.02em;
+      box-shadow: 0 0 55px rgba(251,191,36,0.5), 0 8px 28px rgba(0,0,0,0.5);
+      animation: cta-glow 2.6s ease-in-out infinite;
+    }
+    @keyframes cta-glow {
+      0%,100% { box-shadow: 0 0 55px rgba(251,191,36,0.5), 0 8px 28px rgba(0,0,0,0.5); }
+      50%      { box-shadow: 0 0 90px rgba(251,191,36,0.72), 0 8px 28px rgba(0,0,0,0.5); }
+    }
+    .sub-cta {
+      font-size: clamp(0.72rem,2.1vh,0.88rem); font-weight: 600;
+      color: rgba(253,244,255,0.48);
+      text-shadow: 0 1px 10px rgba(0,0,0,0.7);
+    }
+
+    /* ── Live Typing ── */
+    .cursor {
+      display: inline-block; width: 3px; height: 0.85em;
+      background: var(--acc3); margin-left: 2px;
+      vertical-align: middle; border-radius: 1px;
+      animation: blink 0.85s step-end infinite;
+    }
+    .cursor.c1 { background: var(--acc1); }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ── Particules ── */
+    .particle {
+      position: absolute; border-radius: 50%;
+      pointer-events: none; z-index: 2;
+      animation: rise linear infinite;
+    }
+    @keyframes rise {
+      0%   { transform: translateY(0) translateX(0); opacity: 0; }
+      8%   { opacity: 1; }
+      92%  { opacity: 0.6; }
+      100% { transform: translateY(-100vh) translateX(var(--dx)); opacity: 0; }
+    }
+
+    /* ── Navigation ── */
+    .dots {
+      position: absolute; bottom: 1.5rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 6px; z-index: 20;
+    }
+    .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.16); transition: all 0.32s ease;
+    }
+    .dot.active {
+      width: 26px; border-radius: 3px;
+      background: linear-gradient(90deg, var(--acc1), var(--acc2));
+      box-shadow: 0 0 14px rgba(251,191,36,0.7);
+    }
+
+    .hint {
+      position: absolute; bottom: 3.8rem; left: 0; right: 0;
+      text-align: center; font-size: 0.52rem; letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.16); z-index: 20; transition: opacity 1.5s ease;
+    }
+    .hint.gone { opacity: 0; pointer-events: none; }
+  </style>
+</head>
+<body>
+
+<!-- ── Overlay API Key ElevenLabs ── -->
+<div id="api-overlay">
+  <div class="box">
+    <div class="icon">🎙️</div>
+    <h2>Voix IA professionnelle</h2>
+    <p>Entre ta clé ElevenLabs pour activer la voix Charlotte (élégante, posée)</p>
+    <input id="el-key" type="password" placeholder="sk-..."/>
+    <button class="btn-primary" onclick="saveKey()">Activer la voix →</button>
+    <button class="btn-skip" onclick="skipKey()">Continuer sans voix</button>
+  </div>
+</div>
+
+<div class="phone" id="phone">
+
+  <div id="vi">
+    <div class="vb"></div><div class="vb"></div><div class="vb"></div>
+    <div class="vb"></div><div class="vb"></div>
+  </div>
+  <button class="voice-btn" id="vbtn" onclick="toggleMute(event)">🔊</button>
+
+  <!-- ══════════════════════════════════════
+       SC1 — HOOK
+  ══════════════════════════════════════ -->
+  <div class="scene active" id="sc1">
+    <div class="content">
+      <span class="label">01 — La vérité africaine</span>
+
+      <div class="title-block naked">
+        <h1 class="title mid" style="color:var(--muted);font-weight:600;line-height:1.35;">
+          En Afrique, on ne scale pas avec
+        </h1>
+        <h1 class="title big kw3" id="t1"></h1>
+      </div>
+
+      <div class="sep s3"></div>
+
+      <div class="title-block naked">
+        <p class="title mid" style="color:var(--muted);font-weight:600;">On scale avec</p>
+        <h1 class="title big kw1" id="t2"></h1>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SC2 — PROBLÈME
+  ══════════════════════════════════════ -->
+  <div class="scene" id="sc2">
+    <div class="content">
+      <span class="label l3">02 — Le vrai problème</span>
+
+      <div class="stat" id="stat">
+        <div class="stat-num">14h</div>
+        <div class="stat-desc">par jour · l'argent ne scale pas</div>
+      </div>
+
+      <div class="title-block b3">
+        <h2 class="title mid">
+          Tu t'épuises.<br>
+          Mais ton <span class="kw3">temps est plafonné.</span><br>
+          Ton argent aussi.
+        </h2>
+      </div>
+
+      <p class="title small" style="color:var(--muted);">
+        Temps × effort ≠ liberté &nbsp;·&nbsp; <span class="kw1">Levier</span> = liberté
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SC3 — SOLUTION
+  ══════════════════════════════════════ -->
+  <div class="scene" id="sc3">
+    <div class="content">
+      <span class="label l2">03 — Le levier</span>
+
+      <div class="title-block b2">
+        <h2 class="title">
+          <span class="kw2">IA + systèmes</span><br>
+          travaillent quand<br>
+          <span class="kw1">tu dors.</span>
+        </h2>
+      </div>
+
+      <div class="sep s2"></div>
+
+      <div class="items" id="isc3">
+        <div class="item" data-delay="0">
+          <span class="item-icon">🤖</span>
+          <span>L'<span class="kw2">IA</span> automatise ce qui te prend des heures</span>
+        </div>
+        <div class="item" data-delay="380">
+          <span class="item-icon">🔄</span>
+          <span>Un <span class="kw2">système</span> tourne sans toi 24h/24</span>
+        </div>
+        <div class="item" data-delay="760">
+          <span class="item-icon">📈</span>
+          <span>Le <span class="kw1">levier</span> multiplie sans multiplier l'effort</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SC4 — APPLICATION
+  ══════════════════════════════════════ -->
+  <div class="scene" id="sc4">
+    <div class="content">
+      <span class="label">04 — Tes 3 leviers</span>
+
+      <div id="timer-wrap">
+        <svg width="88" height="88" viewBox="0 0 110 110">
+          <defs>
+            <linearGradient id="tg" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"   stop-color="#FBBF24"/>
+              <stop offset="100%" stop-color="#C084FC"/>
+            </linearGradient>
+          </defs>
+          <circle cx="55" cy="55" r="50" fill="none"
+                  stroke="rgba(251,191,36,0.12)" stroke-width="8"/>
+          <circle cx="55" cy="55" r="50" fill="none"
+                  stroke="url(#tg)" stroke-width="8" stroke-linecap="round"
+                  class="timer-fill" transform="rotate(-90 55 55)"/>
+          <text x="55" y="62" text-anchor="middle"
+                font-family="Inter,sans-serif" font-weight="900"
+                font-size="22" fill="#FBBF24">3×</text>
+        </svg>
+      </div>
+
+      <div class="items" id="isc4">
+        <div class="item i1" data-delay="0">
+          <span class="item-icon">💰</span>
+          <span>Automatise ta <span class="kw1">prospection</span></span>
+        </div>
+        <div class="item i1" data-delay="320">
+          <span class="item-icon">📧</span>
+          <span>Automatise ton <span class="kw1">follow-up</span></span>
+        </div>
+        <div class="item i1" data-delay="640">
+          <span class="item-icon">🤖</span>
+          <span>Délègue à l'<span class="kw2">IA</span> ce qui ne crée pas de valeur</span>
+        </div>
+        <div class="item i1" data-delay="960">
+          <span class="item-icon">📊</span>
+          <span>Mesure ce qui <span class="kw1">rapporte</span> · Coupe le reste</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SC5 — CTA
+  ══════════════════════════════════════ -->
+  <div class="scene" id="sc5">
+    <div class="content">
+      <span class="label">05 — Ton premier levier</span>
+
+      <div class="title-block">
+        <h2 class="title">
+          Quel système tu veux<br>
+          construire pour<br>
+          <span class="kw1">scaler cette semaine ?</span>
+        </h2>
+      </div>
+
+      <button class="cta">Commente <strong>LEVIER</strong> 👇</button>
+
+      <p class="sub-cta">Je t'explique comment le construire</p>
+    </div>
+  </div>
+
+  <div class="hint" id="hint">← CLIC ou → pour naviguer · M pour mute</div>
+  <div class="dots">
+    <div class="dot active" id="d0"></div>
+    <div class="dot" id="d1"></div>
+    <div class="dot" id="d2"></div>
+    <div class="dot" id="d3"></div>
+    <div class="dot" id="d4"></div>
+  </div>
+
+</div>
+
+<script>
+  /* ── ElevenLabs ── */
+  let EL_KEY = localStorage.getItem('el_key') || '';
+  const EL_VID = 'XB0fDUnXU5powFXDhCwa'; // Charlotte
+  const SPEECH = [
+    "En Afrique, on ne scale pas avec plus d'effort. On scale avec plus de levier.",
+    "Tu travailles 14 heures par jour. Tu t'épuises. Mais ton temps est plafonné — et ton argent aussi. Le hustle ne scale pas.",
+    "La différence ? L'IA et les systèmes travaillent quand tu dors. Un système tourne sans toi 24 heures sur 24. C'est ça, le levier.",
+    "Tes 3 leviers concrets : automatiser ta prospection, automatiser ton follow-up, et déléguer à l'IA tout ce qui ne crée pas de valeur. Mesure ce qui rapporte. Coupe le reste.",
+    "Dis-moi en commentaire quel système tu veux construire pour scaler cette semaine. Commente LEVIER. Je t'explique comment le construire."
+  ];
+  let curAudio = null, voiceMuted = false;
+
+  function saveKey() {
+    EL_KEY = document.getElementById('el-key').value.trim();
+    if (EL_KEY) localStorage.setItem('el_key', EL_KEY);
+    document.getElementById('api-overlay').style.display = 'none';
+    goTo(0);
+  }
+  function skipKey() {
+    document.getElementById('api-overlay').style.display = 'none';
+    goTo(0);
+  }
+  if (EL_KEY) document.getElementById('api-overlay').style.display = 'none';
+
+  async function speakEL(text) {
+    if (!EL_KEY || voiceMuted) return;
+    curAudio?.pause();
+    try {
+      const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${EL_VID}/stream`, {
+        method: 'POST',
+        headers: { 'xi-api-key': EL_KEY, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg' },
+        body: JSON.stringify({
+          text, model_id: 'eleven_multilingual_v2',
+          voice_settings: { stability: 0.58, similarity_boost: 0.80, style: 0.14, use_speaker_boost: true }
+        })
+      });
+      if (!res.ok) throw new Error(res.status);
+      const blob = await res.blob();
+      curAudio = new Audio(URL.createObjectURL(blob));
+      const vi = document.getElementById('vi');
+      curAudio.onplay  = () => vi.classList.add('on');
+      curAudio.onended = () => vi.classList.remove('on');
+      curAudio.onerror = () => vi.classList.remove('on');
+      await curAudio.play();
+    } catch(e) { console.warn('EL:', e); }
+  }
+
+  function speakFallback(text) {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'fr-FR'; u.rate = 0.87; u.pitch = 1.1;
+    const v = speechSynthesis.getVoices().find(v => v.lang.startsWith('fr'));
+    if (v) u.voice = v;
+    const vi = document.getElementById('vi');
+    u.onstart = () => vi.classList.add('on');
+    u.onend   = () => vi.classList.remove('on');
+    speechSynthesis.speak(u);
+  }
+
+  function speakScene(idx) {
+    speechSynthesis.cancel(); curAudio?.pause();
+    document.getElementById('vi').classList.remove('on');
+    if (voiceMuted) return;
+    EL_KEY ? speakEL(SPEECH[idx]) : speakFallback(SPEECH[idx]);
+  }
+
+  function toggleMute(e) {
+    e?.stopPropagation();
+    voiceMuted = !voiceMuted;
+    const btn = document.getElementById('vbtn');
+    btn.textContent = voiceMuted ? '🔇' : '🔊';
+    btn.classList.toggle('muted', voiceMuted);
+    if (voiceMuted) { speechSynthesis.cancel(); curAudio?.pause(); document.getElementById('vi').classList.remove('on'); }
+    else speakScene(current);
+  }
+
+  /* ── Particules ── */
+  function addParticles(id, n, color) {
+    const sc = document.getElementById(id);
+    for (let i = 0; i < n; i++) {
+      const p = document.createElement('div');
+      const s = Math.random() * 2.5 + 1;
+      p.className = 'particle';
+      p.style.cssText = [
+        `width:${s}px`,`height:${s}px`,`background:${color}`,
+        `left:${Math.random()*100}%`,`bottom:${-s}px`,
+        `--dx:${(Math.random()-0.5)*50}px`,
+        `animation-duration:${5+Math.random()*8}s`,
+        `animation-delay:${Math.random()*9}s`,`opacity:0`
+      ].join(';');
+      sc.appendChild(p);
+    }
+  }
+  addParticles('sc1', 22, 'rgba(251,191,36,0.65)');
+  addParticles('sc2', 16, 'rgba(244,63,94,0.55)');
+  addParticles('sc3', 14, 'rgba(192,132,252,0.55)');
+  addParticles('sc4', 18, 'rgba(251,191,36,0.6)');
+  addParticles('sc5', 24, 'rgba(251,191,36,0.7)');
+
+  /* ── Timer reset ── */
+  function resetTimer() {
+    const f = document.querySelector('.timer-fill');
+    if (!f) return;
+    f.style.animation = 'none';
+    void f.offsetWidth;
+    f.style.animation = 'fill-arc 1.5s cubic-bezier(0.16,1,0.3,1) forwards';
+  }
+
+  /* ── Navigation ── */
+  const SCENES = ['sc1','sc2','sc3','sc4','sc5'];
+  let current = 0;
+
+  function typeText(el, text, speed, curClass, cb) {
+    if (!el) { cb?.(); return; }
+    el.innerHTML = ''; let i = 0;
+    const cur = document.createElement('span');
+    cur.className = 'cursor' + (curClass ? ' '+curClass : '');
+    el.appendChild(cur);
+    const iv = setInterval(() => {
+      cur.before(text[i++]);
+      if (i >= text.length) {
+        clearInterval(iv);
+        setTimeout(() => cur.remove(), 1200);
+        cb?.();
+      }
+    }, speed);
+  }
+
+  function showItems(id) {
+    document.querySelectorAll(`#${id} .item`).forEach(el =>
+      setTimeout(() => el.classList.add('shown'), +el.dataset.delay + 280));
+  }
+  function hideItems(id) {
+    document.querySelectorAll(`#${id} .item`).forEach(el => el.classList.remove('shown'));
+  }
+
+  function goTo(idx) {
+    idx = ((idx % SCENES.length) + SCENES.length) % SCENES.length;
+
+    const prev = document.getElementById(SCENES[current]);
+    prev.classList.remove('active');
+    prev.classList.add('exiting');
+    setTimeout(() => prev.classList.remove('exiting'), 700);
+    hideItems(SCENES[current]);
+
+    current = idx;
+    document.getElementById(SCENES[current]).classList.add('active');
+    document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i===current));
+
+    if (current === 0) {
+      document.getElementById('t1').textContent = '';
+      document.getElementById('t2').textContent = '';
+      setTimeout(() =>
+        typeText(document.getElementById('t1'), "PLUS D'EFFORT.", 62, '', () =>
+          setTimeout(() =>
+            typeText(document.getElementById('t2'), 'PLUS DE LEVIER.', 62, 'c1'), 520)
+        ), 400);
+    }
+    if (current === 1) {
+      const s = document.getElementById('stat');
+      s.classList.remove('pop'); void s.offsetWidth; s.classList.add('pop');
+    }
+    if (current === 2) showItems('sc3');
+    if (current === 3) { showItems('sc4'); resetTimer(); }
+
+    speakScene(current);
+  }
+
+  document.getElementById('phone').addEventListener('click', e => {
+    if (!e.target.closest('.voice-btn')) goTo(current + 1);
+  });
+  document.addEventListener('keydown', e => {
+    if (['ArrowRight',' ','Enter'].includes(e.key)) { e.preventDefault(); goTo(current+1); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(current-1); }
+    else if (e.key.toLowerCase() === 'm') toggleMute();
+  });
+
+  if (EL_KEY) goTo(0);
+  setTimeout(() => document.getElementById('hint').classList.add('gone'), 6000);
+</script>
+</body>
+</html>
