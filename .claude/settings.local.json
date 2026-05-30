@@ -4,7 +4,13 @@
       "Bash(git rm *)",
       "Bash(git config *)",
       "Bash(git remote *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(git --version)",
+      "Bash(pip3 --version)",
+      "Bash(sysctl -n machdep.cpu.brand_string)",
+      "Bash(system_profiler SPHardwareDataType)",
+      "Bash(curl -sL https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh -o /tmp/miniconda.sh)",
+      "Bash(bash /tmp/miniconda.sh -b -p ~/miniconda3)"
     ]
   }
 }
